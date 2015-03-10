@@ -24,7 +24,7 @@ public class TileMap : MonoBehaviour {
                 blocObject.name = "Empty Bloc";
                 blocObject.transform.parent = blocsObject.transform;
                 blocObject.transform.localPosition = new Vector3 (x, 0, z);
-                Debug.Log (blocObject.name);
+                Debug.Log (tiles[x, z].Block);
                 tiles[x, z].Block = blocObject.GetComponent<Block> ();
             }
         }

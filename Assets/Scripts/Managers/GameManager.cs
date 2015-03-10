@@ -14,9 +14,10 @@ public class GameManager : MonoBehaviour {
     public LayerMask layerMask;
     new RaycastHit _hit;
     void Start () {
-        StartCoroutine (GenerateMap ());
+        //StartCoroutine (GenerateMap ());
+        tileMap.CreateMap (10, 10);
     }
-
+     
     IEnumerator GenerateMap () {
         int _i = 0;
         Transform _parent = GameObject.Find ("Blocks").transform;
