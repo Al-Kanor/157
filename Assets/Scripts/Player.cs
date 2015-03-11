@@ -33,8 +33,7 @@ public class Player : MonoBehaviour {
     void Update()
     {
         RaycastHit hit;
-        if (isMovable && InputManager.Instance.CurrentGesture != InputManager.Gestures.None && InputManager.Instance.CurrentGesture != InputManager.Gestures.DoubleTap)
-        {
+        if (isMovable && InputManager.Instance.CurrentGesture != InputManager.Gestures.None && InputManager.Instance.CurrentGesture != InputManager.Gestures.DoubleTap) {
             if (Physics.Raycast (targetPos, new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
                 if ("Empty Block" == hit.collider.tag) {
