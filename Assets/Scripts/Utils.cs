@@ -5,7 +5,6 @@ using UnityRandom = UnityEngine.Random;
 using System.Collections;
 using System.Linq;
 
-
 public static class Utils
 {
     public static Color RandomColour()

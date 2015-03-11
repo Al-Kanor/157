@@ -4,9 +4,9 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     protected static T _instance;
 
-    /**
-   Returns the instance of this singleton.
-*/
+    /*
+     * Returns the instance of this singleton
+    */
     public static T Instance
     {
         get
@@ -34,8 +34,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
         else
         {
-            //If a Singleton already exists and you find
-            //another reference in scene, destroy it!
+            // If a Singleton already exists and you find another reference in scene, destroy it!
             if (this != _instance)
                 Destroy(this.gameObject);
         }

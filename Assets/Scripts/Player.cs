@@ -1,40 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public class Player : MonoBehaviour {
+    #region Attributs publics
+    public float speed = 10;
+    public float cameraSpeed = 3;
+    public float cameraHeight = 10;
+    public GameObject dynamitePrefab;
+    public LayerMask layerMaskBlock;
+    #endregion
 
-public class Player : MonoBehaviour
-{
-    public GameObject Plane;
-    public Vector3 DesiredPos;
-    public LayerMask layerMask;
-    public LayerMask layerMaskRed;
+    #region Attributs privés
+    private Vector3 targetPos;
+    private bool isMovable = true;
+    #endregion
+
+    #region Méthodes privées
+    void Move () {
+        targetPos += new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y);
+        isMovable = false;
+        BlocksManager.Instance.UpdateBlocks (targetPos);
+    }
 
     void Start()
     {
-        DesiredPos = transform.position;
+        targetPos = transform.position;
+    }
+    void ThrowDynamite () {
+        GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, Quaternion.identity) as GameObject;
     }
 
     void Update()
     {
-        RaycastHit _hit;
-        if (TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap)
+        RaycastHit hit;
+        if (isMovable && InputManager.Instance.CurrentGesture != InputManager.Gestures.None && InputManager.Instance.CurrentGesture != InputManager.Gestures.DoubleTap)
         {
-            GameObject _plane = Instantiate(Plane, transform.position, Quaternion.identity) as GameObject;
-            if (Physics.Raycast(DesiredPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out _hit, 1, layerMask))
+            if (Physics.Raycast (targetPos, new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
-                
-                Destroy(_hit.collider.gameObject);
-                DesiredPos += new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y);
-                
+                if ("Empty Block" == hit.collider.tag) {
+                    hit.collider.gameObject.GetComponent<Block> ().Die ();
+                    ThrowDynamite ();
+                    Move ();
+                }
             }
-            else if(!Physics.Raycast(DesiredPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out _hit, 1, layerMaskRed))
-            {
-                DesiredPos += new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y);
+            else {
+                ThrowDynamite ();
+                Move ();
             }
-
-            
         }
-        transform.position = Vector3.Lerp(transform.position, DesiredPos, 10f * Time.deltaTime);
-        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, transform.position + Vector3.up * 9.5f, 10f * Time.deltaTime);
+        transform.position = Vector3.Lerp (transform.position, targetPos, speed * Time.deltaTime);
+
+        if (Vector3.Distance (transform.position, targetPos) < 0.01) {
+            isMovable = true;
+        }
+
+        Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, new Vector3(transform.position.x, cameraHeight, transform.position.z), cameraSpeed * Time.deltaTime);
     }
+    #endregion
 }
