@@ -50,8 +50,7 @@ public class Player : MonoBehaviour {
         transform.position = Vector3.Lerp (transform.position, targetPos, speed * Time.deltaTime);
 
         if (Vector3.Distance (transform.position, targetPos) < 0.05f) {
-            // Clamp
-            transform.position = targetPos;
+            transform.position = targetPos; // Clamp
 
             isMovable = true;
         }
