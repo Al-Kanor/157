@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
+    public int oreBlockProba = 25;  // Proba of ore block spawn (%)
     public int offset = 10; // Number of lines / columns that must be generated around the player
     public Player player;
     public GameObject blocksContainerObject;
@@ -13,6 +14,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs privés
     private int nbLines = 0;    // Current number of lines of blocks (dynamic)
     private int nbColumns = 0;  // Current number of columns of blocks (dynamic)
+    private int currentId = 1;
     #endregion
 
     #region Méthodes publiques
@@ -24,18 +26,21 @@ public class BlocksManager : Singleton<BlocksManager> {
         for (int x = -offset; x <= offset; x++) {
             for (int z = -offset; z <= offset; z++) {
                 if (x != 0 || z != 0) {
+                    int rand = Random.Range (0, 100);
                     if (1 == Mathf.Abs (x + z)) {
                         // Blocks that directly sourround the player must be blasted
                         currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                     }
                     else {
-                        if (0 == Random.Range (0, 2)) {
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                        }
-                        else {
+                        if (rand < oreBlockProba) {
                             currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                         }
+                        else {
+                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                        }
                     }
+                    currentBlock.GetComponent<Block> ().Id = currentId;
+                    currentId++;
                     currentBlock.transform.parent = blocksContainerObject.transform;
                     currentBlock.transform.localPosition = new Vector3 (x, 0, z);
                 }
@@ -49,74 +54,30 @@ public class BlocksManager : Singleton<BlocksManager> {
      * Generate a new line or a new column according the position in parameter
      */
     public void UpdateBlocks (Vector3 pos) {
-        /*
-        if (pos.x + offset > nbColumns / 2) {
-            Debug.Log ("Nouvelle colonne à droite");
-            for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                GameObject currentBlock;
-                if (0 == Random.Range (0, 2)) {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                }
-                else {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                }
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (nbColumns / 2 + 1, 0, z);
-            } 
-            nbColumns++;
-        }
-        else if (Mathf.Abs (pos.x) + offset > nbColumns / 2) {
-            Debug.Log ("Nouvelle colonne à gauche");
-            for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                GameObject currentBlock;
-                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (-nbColumns / 2 - 1, 0, z);
-            }
-            nbColumns++;
-        }
-        else if (pos.z + offset > nbLines / 2) {
-            Debug.Log ("Nouvelle ligne en haut");
-            for (int x = -nbColumns / 2; x <= nbColumns / 2; ++x) {
-                GameObject currentBlock;
-                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (x, 0, nbLines / 2 + 1);
-            }
-            nbLines++;
-        }
-        else if (Mathf.Abs (pos.z) + offset > nbLines / 2) {
-            Debug.Log ("Nouvelle ligne en bas");
-            for (int x = -nbColumns / 2; x <= nbColumns / 2; ++x) {
-                GameObject currentBlock;
-                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (x, 0, -nbLines / 2 - 1);
-            }
-            nbLines++;
-        }
-         */
         if (pos.x + offset > nbColumns / 2 || Mathf.Abs (pos.x) + offset > nbColumns / 2 || pos.z + offset > nbLines / 2 || Mathf.Abs (pos.z) + offset > nbLines / 2) {
             // New "border" of blocks
             GameObject currentBlock;
+            int rand;
             // Lines
             for (int x = -nbColumns / 2; x <= nbColumns / 2; ++x) {
-                if (0 == Random.Range (0, 2)) {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                rand = Random.Range (0, 100);
+                if (rand < oreBlockProba) {
+                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                 }
                 else {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                 }
                 currentBlock.transform.parent = blocksContainerObject.transform;
                 currentBlock.transform.localPosition = new Vector3 (x, 0, -nbLines / 2 - 1);
             }
 
             for (int x = -nbColumns / 2; x <= nbColumns / 2; ++x) {
-                if (0 == Random.Range (0, 2)) {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                rand = Random.Range (0, 100);
+                if (rand < oreBlockProba) {
+                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                 }
                 else {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                 }
                 currentBlock.transform.parent = blocksContainerObject.transform;
                 currentBlock.transform.localPosition = new Vector3 (x, 0, nbLines / 2 + 1);
@@ -126,22 +87,24 @@ public class BlocksManager : Singleton<BlocksManager> {
 
             // Columns
             for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                if (0 == Random.Range (0, 2)) {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                rand = Random.Range (0, 100);
+                if (rand < oreBlockProba) {
+                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                 }
                 else {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                 }
                 currentBlock.transform.parent = blocksContainerObject.transform;
                 currentBlock.transform.localPosition = new Vector3 (-nbColumns / 2 - 1, 0, z);
             }
 
             for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                if (0 == Random.Range (0, 2)) {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                rand = Random.Range (0, 100);
+                if (rand < oreBlockProba) {
+                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                 }
                 else {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                 }
                 currentBlock.transform.parent = blocksContainerObject.transform;
                 currentBlock.transform.localPosition = new Vector3 (nbColumns / 2 + 1, 0, z);

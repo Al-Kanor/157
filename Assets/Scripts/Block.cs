@@ -9,7 +9,14 @@ public class Block : MonoBehaviour {
     #endregion
 
     #region Attributs privés
+    private int id;
+    #endregion
 
+    #region Accesseurs
+    public int Id {
+        get { return id; }
+        set { id = value; }
+    }
     #endregion
 
     #region Méthodes publiques
@@ -25,6 +32,14 @@ public class Block : MonoBehaviour {
 
         // Bye
         Destroy (gameObject);
+    }
+    #endregion
+
+    #region Méthodes privées
+    void FixedUpdate () {
+        if (true) {
+            //transform.GetChild (0).gameObject.SetActive (false);
+        }
     }
     #endregion
 }
