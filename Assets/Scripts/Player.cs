@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
     public float speed = 10;
     public float cameraSpeed = 3;
     public float cameraHeight = 10;
+	public float cameraDist = 8;
     public GameObject dynamitePrefab;
     public LayerMask layerMaskBlock;
     #endregion
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour {
             isMovable = true;
         }
 
-        Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, new Vector3(transform.position.x, cameraHeight, transform.position.z), cameraSpeed * Time.deltaTime);
+        Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, new Vector3(transform.position.x, cameraHeight, transform.position.z - cameraDist), cameraSpeed * Time.deltaTime);
     }
     #endregion
 }
