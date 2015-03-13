@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     void Move () {
         targetPos += new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y);
         isMovable = false;
-        BlocksManager.Instance.UpdateBlocks (targetPos);
+        BlocksManager.Instance.UpdateBlocks (targetPos, InputManager.Instance.SwipeAxis);
     }
 
     void Start()

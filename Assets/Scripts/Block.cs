@@ -37,9 +37,7 @@ public class Block : MonoBehaviour {
 
     #region Méthodes privées
     void FixedUpdate () {
-        if (true) {
-            //transform.GetChild (0).gameObject.SetActive (false);
-        }
+        
     }
     #endregion
 }
