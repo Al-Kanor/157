@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
     public float speed = 10;
     public float cameraSpeed = 3;
     public float cameraHeight = 10;
+	public float cameraDist = 8;
     public GameObject dynamitePrefab;
     public LayerMask layerMaskBlock;
     #endregion
@@ -50,13 +51,12 @@ public class Player : MonoBehaviour {
         transform.position = Vector3.Lerp (transform.position, targetPos, speed * Time.deltaTime);
 
         if (Vector3.Distance (transform.position, targetPos) < 0.05f) {
-            // Clamp
-            transform.position = targetPos;
+            transform.position = targetPos; // Clamp
 
             isMovable = true;
         }
 
-        Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, new Vector3(transform.position.x, cameraHeight, transform.position.z), cameraSpeed * Time.deltaTime);
+        Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, new Vector3(transform.position.x, cameraHeight, transform.position.z - cameraDist), cameraSpeed * Time.deltaTime);
     }
     #endregion
 }
