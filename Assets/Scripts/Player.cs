@@ -19,6 +19,14 @@ public class Player : MonoBehaviour {
     #region Méthodes privées
     void Move () {
         targetPos += new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y);
+        
+        // Rotation
+        float y = InputManager.Instance.SwipeAxis.x * 90;
+        if (-1 == InputManager.Instance.SwipeAxis.y) {
+            y = 180;
+        }
+        transform.rotation = Quaternion.Euler(new Vector3 (0, y, 0));
+        
         isMovable = false;
         BlocksManager.Instance.UpdateBlocks (targetPos, InputManager.Instance.SwipeAxis);
     }
