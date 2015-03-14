@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 	public float cameraDist = 8;
     public GameObject dynamitePrefab;
     public LayerMask layerMaskBlock;
+    public LayerMask oreMaskBlock;
     #endregion
 
     #region Attributs privés
@@ -27,6 +28,21 @@ public class Player : MonoBehaviour {
         }
         transform.rotation = Quaternion.Euler(new Vector3 (0, y, 0));
         
+        // Minerai catch
+        RaycastHit hit;
+        // Forward
+        if (Physics.Raycast (targetPos, transform.forward, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        // Left
+        if (Physics.Raycast (targetPos, -transform.right, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        // Right
+        if (Physics.Raycast (targetPos, transform.right, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+
         isMovable = false;
         BlocksManager.Instance.UpdateBlocks (targetPos, InputManager.Instance.SwipeAxis);
     }

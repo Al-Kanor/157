@@ -5,16 +5,12 @@ using UnityEngine.UI;
 public class UI_Manager_Game : MonoBehaviour {
 
 	public Scrollbar scoreScrollbar;
-	public GameManager gameManager;
 	public Image Lash;
 	private float Timer;
 	private int score;
 	private int stacks;
 	private float scoreScrollbarValue;
 	private float baseLashYPosition;
-
-
-
 
 	// Use this for initialization
 	void Start () {
@@ -36,6 +32,5 @@ public class UI_Manager_Game : MonoBehaviour {
 		Vector3 newVector = Lash.rectTransform.localPosition;
 		newVector.y = (baseLashYPosition - (1.92f*Timer));
 		Lash.rectTransform.localPosition = newVector;
-
 	}
 }
