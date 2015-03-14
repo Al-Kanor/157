@@ -32,6 +32,9 @@ public class GameManager : Singleton<GameManager> {
             if (timer == emergencyCountdown) {
                 Instantiate (emergencyLightPrefab);
             }
+            else if (timer <= 0) {
+                Application.LoadLevel ("Main_Menu");
+            }
             yield return new WaitForSeconds (1);
         } while (true);
     }

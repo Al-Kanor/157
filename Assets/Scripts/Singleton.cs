@@ -19,7 +19,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 {
                     GameObject o = new GameObject("_SingleBehaviour_<" + typeof(T).ToString() + ">");
                     _instance = o.AddComponent<T>();
-                    DontDestroyOnLoad(_instance.gameObject);
+                    //DontDestroyOnLoad(_instance.gameObject);
                 }
             }
             return _instance;

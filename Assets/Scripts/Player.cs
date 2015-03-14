@@ -19,11 +19,11 @@ public class Player : MonoBehaviour {
 
     #region Méthodes privées
     void Move () {
-        targetPos += new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y);
+        targetPos += new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y);
         
         // Rotation
-        float y = InputManager.Instance.SwipeAxis.x * 90;
-        if (-1 == InputManager.Instance.SwipeAxis.y) {
+        float y = TouchManager.Instance.SwipeAxis.x * 90;
+        if (-1 == TouchManager.Instance.SwipeAxis.y) {
             y = 180;
         }
         transform.rotation = Quaternion.Euler(new Vector3 (0, y, 0));
@@ -44,7 +44,7 @@ public class Player : MonoBehaviour {
         }
 
         isMovable = false;
-        BlocksManager.Instance.UpdateBlocks (targetPos, InputManager.Instance.SwipeAxis);
+        BlocksManager.Instance.UpdateBlocks (targetPos, TouchManager.Instance.SwipeAxis);
     }
 
     void Start()
@@ -58,8 +58,8 @@ public class Player : MonoBehaviour {
     void Update()
     {
         RaycastHit hit;
-        if (isMovable && InputManager.Instance.CurrentGesture != InputManager.Gestures.None && InputManager.Instance.CurrentGesture != InputManager.Gestures.DoubleTap) {
-            if (Physics.Raycast (targetPos, new Vector3 (InputManager.Instance.SwipeAxis.x, 0, InputManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
+        if (isMovable && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
+            if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
                 if ("Empty Block" == hit.collider.tag) {
                     hit.collider.gameObject.GetComponent<Block> ().Die ();
