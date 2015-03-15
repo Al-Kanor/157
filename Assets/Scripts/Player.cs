@@ -56,9 +56,6 @@ public class Player : MonoBehaviour {
     }
 
     void Update() {
-        #region Test
-        
-        #endregion
         RaycastHit hit;
         if (isMovable && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
             if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
@@ -67,11 +64,14 @@ public class Player : MonoBehaviour {
                     hit.collider.gameObject.GetComponent<Block> ().Die ();
                     ThrowDynamite ();
                     Move ();
+                    transform.GetChild (0).GetComponent<Animation> ().Stop ();
+                    transform.GetChild (0).GetComponent<Animation> ().Play ("Blast");
                 }
             }
             else {
                 ThrowDynamite ();
                 Move ();
+                transform.GetChild (0).GetComponent<Animation> ().Play ("Walk");
             }
         }
         transform.position = Vector3.Lerp (transform.position, targetPos, speed * Time.deltaTime);
@@ -79,6 +79,8 @@ public class Player : MonoBehaviour {
         if (Vector3.Distance (transform.position, targetPos) < 0.05f) {
             transform.position = targetPos; // Clamp
 
+            transform.GetChild (0).GetComponent<Animation> ().PlayQueued ("Idle");
+                        
             isMovable = true;
         }
 
