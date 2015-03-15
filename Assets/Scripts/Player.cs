@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
     #region Attributs privés
     private Vector3 targetPos;
     private bool isMovable = true;
+	private Quaternion dynamiteRotation = Quaternion.identity;
     #endregion
 
     #region Méthodes privées
@@ -52,7 +53,8 @@ public class Player : MonoBehaviour {
         targetPos = transform.position;
     }
     void ThrowDynamite () {
-        GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, Quaternion.identity) as GameObject;
+		dynamiteRotation.eulerAngles = new Vector3(0, Random.Range(0,360), 0);
+        GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
     }
 
     void Update() {
