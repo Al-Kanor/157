@@ -79,8 +79,13 @@ public class Player : MonoBehaviour {
         if (Vector3.Distance (transform.position, targetPos) < 0.05f) {
             transform.position = targetPos; // Clamp
 
-            transform.GetChild (0).GetComponent<Animation> ().PlayQueued ("Idle");
-                        
+            if (0 == Random.Range (0, 10)) {
+                transform.GetChild (0).GetComponent<Animation> ().PlayQueued ("Look");
+            }
+            else {
+                transform.GetChild (0).GetComponent<Animation> ().PlayQueued ("Idle");
+            }
+        
             isMovable = true;
         }
 
