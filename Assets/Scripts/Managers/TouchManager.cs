@@ -34,7 +34,7 @@ public class TouchManager : Singleton<TouchManager>
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
                 Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
                 delta *=  MouseSensibilityRatio;
-
+                
                 if (delta == Vector2.zero && Input.touchCount > 0)
                 {
                     // delta = Input.touches[0].deltaPosition * TouchSensibilityRatio * 1280.0f / _height;
@@ -42,8 +42,8 @@ public class TouchManager : Singleton<TouchManager>
                     oldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.touches[0].position);
                 }
 #else
-               // Vector2 delta = Input.touches[0].deltaPosition * TouchSensibilityRatio * 1280.0f / _height;
-               Vector2 delta = ((Vector2)Camera.main.ScreenToWorldPoint(Input.touches[0].position) - oldPos) * TouchSensibilityRatio;
+               Vector2 delta = Input.touches[0].deltaPosition * TouchSensibilityRatio * 1280.0f / _height;
+               //Vector2 delta = ((Vector2)Camera.main.ScreenToWorldPoint(Input.touches[0].position) - oldPos) * TouchSensibilityRatio;
                oldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.touches[0].position);
 #endif
 

@@ -55,8 +55,10 @@ public class Player : MonoBehaviour {
         GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, Quaternion.identity) as GameObject;
     }
 
-    void Update()
-    {
+    void Update() {
+        #region Test
+        
+        #endregion
         RaycastHit hit;
         if (isMovable && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
             if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
