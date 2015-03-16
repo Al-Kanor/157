@@ -44,7 +44,7 @@ public class UI_Manager_Game : MonoBehaviour {
 		Vector3 newVector = lash.rectTransform.localPosition;
 		newVector.y = (baseLashYPosition - (1.92f*timer2));
 		lash.rectTransform.localPosition = newVector;
-		Debug.Log ("Score = "+ score2);
+		//Debug.Log ("Score = "+ score2);
 		if (score2 > (scroreBarLimit*(stacks+1))) 
 		{
 			stacks = stacks +1;
