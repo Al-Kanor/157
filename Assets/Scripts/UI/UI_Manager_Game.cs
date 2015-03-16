@@ -57,27 +57,27 @@ public class UI_Manager_Game : MonoBehaviour {
 		switch (stacks) 
 		{
 			case 1 :
-				scoreScrollbar.image.sprite = handle_1;
+				scoreScrollbar.GetComponent<Image>().sprite = handle_1;
 				scrollBarHandle.sprite = handle_2;
 			break;
 
 			case 2 : 
-				scoreScrollbar.image.sprite = handle_2;
+				scoreScrollbar.GetComponent<Image>().sprite = handle_2;
 				scrollBarHandle.sprite = handle_3;
 			break;
 				
 			case 3 : 
-				scoreScrollbar.image.sprite = handle_3;
+				scoreScrollbar.GetComponent<Image>().sprite = handle_3;
 				scrollBarHandle.sprite = handle_4;
 			break;
 
 			case 4 : 
-				scoreScrollbar.image.sprite = handle_4;
+				scoreScrollbar.GetComponent<Image>().sprite = handle_4;
 				scrollBarHandle.sprite = handle_5;
 			break;
 
 			case 5 : 
-				scoreScrollbar.image.sprite = handle_5;
+				scoreScrollbar.GetComponent<Image>().sprite = handle_5;
 				scrollBarHandle.sprite = handle_6;
 			break;
 
