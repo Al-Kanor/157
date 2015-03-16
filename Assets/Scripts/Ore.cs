@@ -30,6 +30,7 @@ public class Ore : MonoBehaviour {
             transform.position = Vector3.Lerp (transform.position, target.position, speed * Time.deltaTime);
             yield return new WaitForEndOfFrame ();
         } while (Vector3.Distance (target.position, transform.position) > 0.1f);
+        GameManager.Instance.Score++;
         Destroy (gameObject);
     }
     #endregion
