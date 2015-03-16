@@ -28,7 +28,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                 if (x != 0 || z != 0) {
                     int rand = Random.Range (0, 100);
                     if (1 == Mathf.Abs (x + z)) {
-                        // Blocks that directly sourround the player must be blasted
+                        // Blocks that directly sourround the player must be blastable
                         currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                     }
                     else {
@@ -39,7 +39,6 @@ public class BlocksManager : Singleton<BlocksManager> {
                             currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                         }
                     }
-                    currentBlock.GetComponent<Block> ().Id = currentId;
                     currentId++;
                     currentBlock.transform.parent = blocksContainerObject.transform;
                     currentBlock.transform.localPosition = new Vector3 (x, 0, z);
@@ -54,10 +53,6 @@ public class BlocksManager : Singleton<BlocksManager> {
      * Generate a new line or a new column according the position in parameter
      */
     public void UpdateBlocks (Vector3 pos, Vector3 dir) {
-        RaycastHit hit;
-        GameObject currentBlock;
-        int rand;
-
         if (dir.x != 0) {
             // Move to the left or the right
             for (float z = pos.z - offset; z <= pos.z + offset; ++z) {
@@ -107,12 +102,12 @@ public class BlocksManager : Singleton<BlocksManager> {
         if (Physics.Raycast (new Vector3 (x, 3, z), Vector3.down, out hit, 10)) {
             if ("Ground" != hit.collider.name) {
                 if (null != hit.collider.GetComponent<Block> ()) {
-                    // It's a blocks ! Desactivation of the collider
+                    // It's a blocks ! Desactivation of the renderer
                     hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
                 }
                 else {
                     // It's another object (dynamite ?) => bye bye
-                    Destroy (hit.collider.gameObject);
+                    //Destroy (hit.collider.gameObject);
                 }
             }
         }
