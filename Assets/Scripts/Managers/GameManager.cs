@@ -10,12 +10,18 @@ public class GameManager : Singleton<GameManager> {
     #endregion
 
     #region Attributs privés
+    private int score = 0;
     private float timer;
 	private bool emergency = false;
     #endregion
 
     #region Accesseurs
-	public float Timer {
+    public int Score {
+        get { return score; }
+        set { score = value; }
+    }
+
+    public float Timer {
         get { return timer; }
     }
     #endregion
