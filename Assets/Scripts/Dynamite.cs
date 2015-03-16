@@ -5,6 +5,7 @@ public class Dynamite : MonoBehaviour {
     #region Attributs publics
     public int countdown = 5;
     public GameObject explosionPrefab;
+    public LayerMask layerMaskPlayer;
     public LayerMask layerMaskBlock;
     #endregion
 
@@ -27,6 +28,13 @@ public class Dynamite : MonoBehaviour {
         }
         if (Physics.Raycast (transform.position, Vector3.right, out hit, 1, layerMaskBlock)) {
             hit.collider.gameObject.GetComponent<Block> ().Die ();
+        }
+        #endregion
+
+        #region Player stun
+        Debug.Log (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position));
+        if (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position) <= 1.5f) {
+            GameManager.Instance.player.Stuned = true;
         }
         #endregion
 

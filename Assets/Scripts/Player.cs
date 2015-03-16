@@ -4,9 +4,11 @@ using System.Collections;
 public class Player : MonoBehaviour {
     #region Attributs publics
     public float speed = 10;
+    public float stunDuration = 2;
+    public float invincibilityDuration = 1;
     public float cameraSpeed = 3;
-    public float cameraHeight = 10;
-	public float cameraDist = 8;
+    public float cameraHeight = 5.75f;
+	public float cameraDist = 3.5f;
     public GameObject dynamitePrefab;
     public LayerMask layerMaskBlock;
     public LayerMask oreMaskBlock;
@@ -16,7 +18,27 @@ public class Player : MonoBehaviour {
     #region Attributs privés
     private Vector3 targetPos;
     private bool isMovable = true;
+    private bool isStunable = true;
+    private bool stuned = false;
 	private Quaternion dynamiteRotation = Quaternion.identity;
+    #endregion
+
+    #region Accesseurs
+    public bool Stuned {
+        get { return stuned; }
+        set {
+            if (isStunable) {
+                stuned = value;
+            }
+            if (stuned) {
+                StartCoroutine ("UpdateStun");
+            }
+        }
+    }
+    #endregion
+
+    #region Méthodes publiques
+    
     #endregion
 
     #region Méthodes privées
@@ -65,7 +87,7 @@ public class Player : MonoBehaviour {
 
     void Update() {
         RaycastHit hit;
-        if (isMovable && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
+        if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
             if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
                 if ("Empty Block" == hit.collider.tag) {
@@ -98,6 +120,18 @@ public class Player : MonoBehaviour {
         }
 
         Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, new Vector3(transform.position.x, cameraHeight, transform.position.z - cameraDist), cameraSpeed * Time.deltaTime);
+    }
+
+    IEnumerator UpdateStun () {
+        //Debug.Log ("stun !");
+        stuned = true;
+        isStunable = false;
+        yield return new WaitForSeconds (stunDuration);
+        //Debug.Log ("Plus stun !");
+        stuned = false;
+        yield return new WaitForSeconds (invincibilityDuration);
+        //Debug.Log ("Plus invincible !");
+        isStunable = true;
     }
     #endregion
 }
