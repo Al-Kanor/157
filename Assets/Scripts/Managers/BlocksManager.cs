@@ -4,7 +4,7 @@ using System.Collections;
 public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
     public int oreBlockProba = 25;  // Proba of ore block spawn (%)
-    public int offset = 10; // Number of lines / columns that must be generated around the player
+    public int offset = 7; // Number of lines / columns that must be generated around the player
     public Player player;
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
