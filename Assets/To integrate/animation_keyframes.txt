@@ -1,4 +1,0 @@
-00-20 : idle
-21-71 : idle 2 (il regarde autour de lui)
-72-108 : casse caillou BLEM
-109-132 : deplacement
