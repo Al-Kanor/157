@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
     public GameObject dynamitePrefab;
     public LayerMask layerMaskBlock;
     public LayerMask oreMaskBlock;
+    public LayerMask dynamiteLayerMask;
     #endregion
 
     #region Attributs privés
@@ -52,8 +53,13 @@ public class Player : MonoBehaviour {
     {
         targetPos = transform.position;
     }
+
     void ThrowDynamite () {
-		dynamiteRotation.eulerAngles = new Vector3(0, Random.Range(0,360), 0);
+        RaycastHit hit;
+        if (Physics.Raycast (transform.position, -Vector3.up, out hit, 1, dynamiteLayerMask)) {
+            return;
+        }
+		dynamiteRotation.eulerAngles = new Vector3 (0, Random.Range (0, 360), 0);
         GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
     }
 
