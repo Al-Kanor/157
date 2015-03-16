@@ -10,11 +10,12 @@ public class GameManager : Singleton<GameManager> {
     #endregion
 
     #region Attributs privés
-    private int timer;
+    private float timer;
+	private bool emergency = false;
     #endregion
 
     #region Accesseurs
-    public int Timer {
+	public float Timer {
         get { return timer; }
     }
     #endregion
@@ -28,14 +29,15 @@ public class GameManager : Singleton<GameManager> {
 
     IEnumerator UpdateTimer () {
         do {
-            timer--;
-            if (timer == emergencyCountdown) {
+            timer -= Time.deltaTime;
+			if (!emergency && timer <= emergencyCountdown) {
                 Instantiate (emergencyLightPrefab);
+				emergency = true;
             }
             else if (timer <= 0) {
                 Application.LoadLevel ("Main_Menu");
             }
-            yield return new WaitForSeconds (1);
+			yield return new WaitForEndOfFrame();
         } while (true);
     }
     #endregion
