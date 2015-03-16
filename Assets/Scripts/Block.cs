@@ -4,19 +4,17 @@ using System.Collections;
 public class Block : MonoBehaviour {
     #region Attributs publics
     public int ores = 0;
+    public GameObject destroyedBlockPrefab;
     public GameObject explosionPrefab;
     public GameObject orePrefab;
     #endregion
 
     #region Attributs privés
-    private int id;
+    private Transform blocksContainerTransform;
     #endregion
 
     #region Accesseurs
-    public int Id {
-        get { return id; }
-        set { id = value; }
-    }
+    
     #endregion
 
     #region Méthodes publiques
@@ -27,8 +25,12 @@ public class Block : MonoBehaviour {
 
         // Ore
         if (null != orePrefab) {
-            GameObject ore = Instantiate (orePrefab, transform.position, Quaternion.identity) as GameObject;
+            Instantiate (orePrefab, transform.position, Quaternion.identity);
         }
+
+        // Instantiate an invisible block for avoid the proccedural generation
+        GameObject destroyedBlockObject = Instantiate (destroyedBlockPrefab, transform.position, Quaternion.identity) as GameObject;
+        destroyedBlockObject.transform.parent = blocksContainerTransform;
 
         // Bye
         Destroy (gameObject);
@@ -38,6 +40,10 @@ public class Block : MonoBehaviour {
     #region Méthodes privées
     void FixedUpdate () {
         
+    }
+
+    void Start () {
+        blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
     }
     #endregion
 }

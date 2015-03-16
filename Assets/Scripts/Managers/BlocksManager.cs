@@ -28,7 +28,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                 if (x != 0 || z != 0) {
                     int rand = Random.Range (0, 100);
                     if (1 == Mathf.Abs (x + z)) {
-                        // Blocks that directly sourround the player must be blasted
+                        // Blocks that directly sourround the player must be blastable
                         currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                     }
                     else {
@@ -39,7 +39,6 @@ public class BlocksManager : Singleton<BlocksManager> {
                             currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                         }
                     }
-                    currentBlock.GetComponent<Block> ().Id = currentId;
                     currentId++;
                     currentBlock.transform.parent = blocksContainerObject.transform;
                     currentBlock.transform.localPosition = new Vector3 (x, 0, z);
@@ -54,232 +53,61 @@ public class BlocksManager : Singleton<BlocksManager> {
      * Generate a new line or a new column according the position in parameter
      */
     public void UpdateBlocks (Vector3 pos, Vector3 dir) {
-        /*
-        if (pos.x + offset > nbColumns / 2 || Mathf.Abs (pos.x) + offset > nbColumns / 2 || pos.z + offset > nbLines / 2 || Mathf.Abs (pos.z) + offset > nbLines / 2) {
-            // New "border" of blocks
-            GameObject currentBlock;
-            int rand;
-            // Lines
-            // Creation of the bottom lines
-            for (int x = -nbColumns / 2; x <= nbColumns / 2; ++x) {
-                rand = Random.Range (0, 100);
-                if (rand < oreBlockProba) {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                }
-                else {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                }
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (x, 0, -nbLines / 2 - 1);
-            }
-
-            // Creation of the top lines
-            for (int x = -nbColumns / 2; x <= nbColumns / 2; ++x) {
-                rand = Random.Range (0, 100);
-                if (rand < oreBlockProba) {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                }
-                else {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                }
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (x, 0, nbLines / 2 + 1);
-            }
-            
-            nbLines += 2;
-
-            // Columns
-            // Creation of the left lines
-            for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                rand = Random.Range (0, 100);
-                if (rand < oreBlockProba) {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                }
-                else {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                }
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (-nbColumns / 2 - 1, 0, z);
-            }
-
-            // Creation of the right lines
-            for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                rand = Random.Range (0, 100);
-                if (rand < oreBlockProba) {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                }
-                else {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                }
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (nbColumns / 2 + 1, 0, z);
-            }
-            nbColumns += 2;
-
-            // Unloading of the far lines / columns
-            if (pos.x > 0) {
-                // The player is moving to the right, unloading of the leftmost column
-                RaycastHit hit;
-                for (int z = -nbLines / 2; z <= nbLines / 2; ++z) {
-                    Debug.DrawRay (new Vector3 (-nbColumns / 2, 3, z), Vector3.down, Color.red, 3000);
-                    if (Physics.Raycast(new Vector3(-nbColumns / 2, 3, z), Vector3.down, out hit, 10)) {
-                        GameObject.Destroy (hit.collider.gameObject);
-                    }
-                }
-            }
-            else {
-                // The player is moving to the left, unloading of the rightmost column
-            }
-
-            if (pos.z > 0) {
-                // The player is moving to the top, unloading of the bottommost column
-            }
-            else {
-                // The player is moving to the left, unloading of the topmost column
+        if (dir.x != 0) {
+            // Move to the left or the right
+            for (float z = pos.z - offset; z <= pos.z + offset; ++z) {
+                float originX = dir.x < 0 ? pos.x - offset : pos.x + offset;
+                GenerateBlock (pos, dir, originX, z);
             }
         }
-        */
-        RaycastHit hit;
+        else {
+            // Move to the top or the bottom
+            for (float x = pos.x - offset; x <= pos.x + offset; ++x) {
+                float originZ = dir.y < 0 ? pos.z - offset : pos.z + offset;
+                GenerateBlock (pos, dir, x, originZ);
+            }
+        }
+    }
+    #endregion
+
+    #region Méthodes privées
+    private void GenerateBlock (Vector3 pos, Vector3 dir, float x, float z) {
         GameObject currentBlock;
+        RaycastHit hit;
         int rand;
+        if (Physics.Raycast (new Vector3 (x, 3, z), Vector3.down, out hit, 10)) {
+            if ("Ground" == hit.collider.name) {
+                rand = Random.Range (0, 100);
+                if (rand < oreBlockProba) {
+                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                }
+                else {
+                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                }
+                currentBlock.transform.parent = blocksContainerObject.transform;
+                currentBlock.transform.localPosition = new Vector3 (x, 0, z);
+            }
+            else if (null != hit.collider.GetComponent<Block> ()) {
+                hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
+            }
+        }
+        // Unloading
+        if (dir.x != 0) {
+            x = dir.x < 0 ? pos.x + offset + 1 : pos.x - offset - 1;
+        }
+        else {
+            z = dir.y < 0 ? pos.z + offset + 1 : pos.z - offset - 1;
+        }
 
-        if (dir.x > 0) {
-            // Move to the right
-            for (float z = pos.z - offset; z <= pos.z + offset; ++z) {
-                // right loading
-                if (Physics.Raycast (new Vector3 (pos.x + offset, 3, z), Vector3.down, out hit, 10)) {
-                    if ("Ground" == hit.collider.name) {
-                        rand = Random.Range (0, 100);
-                        if (rand < oreBlockProba) {
-                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                        }
-                        else {
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                        }
-                        currentBlock.transform.parent = blocksContainerObject.transform;
-                        currentBlock.transform.localPosition = new Vector3 (pos.x + offset, 0, z);
-                    }
-                    else if (null != hit.collider.GetComponent<Block> ()) {
-                        hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
-                    }
+        if (Physics.Raycast (new Vector3 (x, 3, z), Vector3.down, out hit, 10)) {
+            if ("Ground" != hit.collider.name) {
+                if (null != hit.collider.GetComponent<Block> ()) {
+                    // It's a blocks ! Desactivation of the renderer
+                    hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
                 }
-                // left unloading
-                if (Physics.Raycast (new Vector3 (pos.x - offset - 1, 3, z), Vector3.down, out hit, 10)) {
-                    if ("Ground" != hit.collider.name) {
-                        if (null != hit.collider.GetComponent<Block> ()) {
-                            // It's a blocks ! Desactivation of the collider
-                            hit.collider.transform.GetChild(0).GetComponent<MeshRenderer> ().enabled = false;
-                        }
-                        else {
-                            // It's another object (dynamite ?) => bye bye
-                            Destroy (hit.collider.gameObject);
-                        }
-                    }
-                }
-            }
-        }
-        else if (dir.x < 0) {
-            // Move to the left
-            for (float z = pos.z - offset; z <= pos.z + offset; ++z) {
-                // left loading
-                if (Physics.Raycast (new Vector3 (pos.x - offset, 3, z), Vector3.down, out hit, 10)) {
-                    if ("Ground" == hit.collider.name) {
-                        rand = Random.Range (0, 100);
-                        if (rand < oreBlockProba) {
-                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                        }
-                        else {
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                        }
-                        currentBlock.transform.parent = blocksContainerObject.transform;
-                        currentBlock.transform.localPosition = new Vector3 (pos.x - offset, 0, z);
-                    }
-                    else if (null != hit.collider.GetComponent<Block> ()) {
-                        hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
-                    }
-                }
-                // right unloading
-                if (Physics.Raycast (new Vector3 (pos.x + offset + 1, 3, z), Vector3.down, out hit, 10)) {
-                    if ("Ground" != hit.collider.name) {
-                        if (null != hit.collider.GetComponent<Block> ()) {
-                            // It's a blocks ! Desactivation of the collider
-                            hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
-                        }
-                        else {
-                            // It's another object (dynamite ?) => bye bye
-                            Destroy (hit.collider.gameObject);
-                        }
-                    }
-                }
-            }
-        }
-        else if (dir.y > 0) {
-            // Move to the top
-            for (float x = pos.x - offset; x <= pos.x + offset; ++x) {
-                // top loading
-                if (Physics.Raycast (new Vector3 (x, 3, pos.z + offset), Vector3.down, out hit, 10)) {
-                    if ("Ground" == hit.collider.name) {
-                        rand = Random.Range (0, 100);
-                        if (rand < oreBlockProba) {
-                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                        }
-                        else {
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                        }
-                        currentBlock.transform.parent = blocksContainerObject.transform;
-                        currentBlock.transform.localPosition = new Vector3 (x, 0, pos.z + offset);
-                    }
-                    else if (null != hit.collider.GetComponent<Block> ()) {
-                        hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
-                    }
-                }
-                // bottom unloading
-                if (Physics.Raycast (new Vector3 (x, 3, pos.z - offset - 1), Vector3.down, out hit, 10)) {
-                    if ("Ground" != hit.collider.name) {
-                        if (null != hit.collider.GetComponent<Block> ()) {
-                            // It's a blocks ! Desactivation of the collider
-                            hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
-                        }
-                        else {
-                            // It's another object (dynamite ?) => bye bye
-                            Destroy (hit.collider.gameObject);
-                        }
-                    }
-                }
-            }
-        }
-        else if (dir.y < 0) {
-            // Move to the bottom
-            for (float x = pos.x - offset; x <= pos.x + offset; ++x) {
-                // bottom loading
-                if (Physics.Raycast (new Vector3 (x, 3, pos.z - offset), Vector3.down, out hit, 10)) {
-                    if ("Ground" == hit.collider.name) {
-                        rand = Random.Range (0, 100);
-                        if (rand < oreBlockProba) {
-                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                        }
-                        else {
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                        }
-                        currentBlock.transform.parent = blocksContainerObject.transform;
-                        currentBlock.transform.localPosition = new Vector3 (x, 0, pos.z - offset);
-                    }
-                    else if (null != hit.collider.GetComponent<Block> ()) {
-                        hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
-                    }
-                }
-                // top unloading
-                if (Physics.Raycast (new Vector3 (x, 3, pos.z + offset + 1), Vector3.down, out hit, 10)) {
-                    if ("Ground" != hit.collider.name) {
-                        if (null != hit.collider.GetComponent<Block> ()) {
-                            // It's a blocks ! Desactivation of the collider
-                            hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
-                        }
-                        else {
-                            // It's another object (dynamite ?) => bye bye
-                            Destroy (hit.collider.gameObject);
-                        }
-                    }
+                else {
+                    // It's another object (dynamite ?) => bye bye
+                    //Destroy (hit.collider.gameObject);
                 }
             }
         }
