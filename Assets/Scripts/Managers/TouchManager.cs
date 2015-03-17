@@ -11,7 +11,8 @@ public class TouchManager : Singleton<TouchManager>
     public Gestures CurrentGesture = Gestures.None;
     public float TouchSensibilityRatio = 0.5f;
     public float MouseSensibilityRatio = 0.5f;
-    public float SwipeTolerance = 0.3f;
+    public float TouchSwipeTolerance = 1f;
+    public float MouseSwipeTolerance = 0.5f;
     public float DoubleTapWait = 0.5f;
 
     void Update()
@@ -33,8 +34,8 @@ public class TouchManager : Singleton<TouchManager>
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
                 Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-                delta *=  MouseSensibilityRatio;
-                
+                delta *= MouseSensibilityRatio;
+
                 if (delta == Vector2.zero && Input.touchCount > 0)
                 {
                     // delta = Input.touches[0].deltaPosition * TouchSensibilityRatio * 1280.0f / _height;
@@ -47,7 +48,11 @@ public class TouchManager : Singleton<TouchManager>
                oldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.touches[0].position);
 #endif
 
-                if (delta.x > SwipeTolerance )
+                float swipeTolerance = TouchSwipeTolerance;
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
+                swipeTolerance = MouseSwipeTolerance;
+#endif
+                if (delta.x > swipeTolerance && Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
                 {
                     //Debug.Log("right");
                     CurrentGesture = Gestures.SwipeRight;
@@ -55,7 +60,7 @@ public class TouchManager : Singleton<TouchManager>
                     CheckSwips = false;
                 }
 
-                else if (delta.x < -SwipeTolerance  )
+                else if (delta.x < -swipeTolerance && Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
                 {
                     //Debug.Log("left");
                     CurrentGesture = Gestures.SwipeLeft;
@@ -63,7 +68,7 @@ public class TouchManager : Singleton<TouchManager>
                     CheckSwips = false;
                 }
 
-                else if (delta.y < -SwipeTolerance)
+                 else if (delta.y < -swipeTolerance)
                 {
                     //Debug.Log("down");
                     CurrentGesture = Gestures.SwipeDown;
@@ -71,12 +76,14 @@ public class TouchManager : Singleton<TouchManager>
                     CheckSwips = false;
                 }
 
-                else if (delta.y > SwipeTolerance)
+                else if (delta.y > swipeTolerance)
                 {
                     //Debug.Log("up");
                     CurrentGesture = Gestures.SwipeUp;
                     SwipeAxis = Vector2.up;
                     CheckSwips = false;
+                   
+    
                 }
             }
 
