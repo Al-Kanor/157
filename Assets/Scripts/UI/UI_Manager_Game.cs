@@ -16,6 +16,19 @@ public class UI_Manager_Game : MonoBehaviour {
 	public Sprite handle_5;
 	public Sprite handle_6;
 
+	public Canvas pauseCanvas;
+	public Canvas gameCanvas;
+	public Canvas optionCanvas;
+
+	public Image soundLevel;
+	public Image lumLevel;
+
+	public Sprite lvl0;
+	public Sprite lvl1;
+	public Sprite lvl2;
+	public Sprite lvl3;
+	public Sprite lvl4;
+
 	private float timer1;
 	private float timer2;
 	private int score1;
@@ -24,13 +37,24 @@ public class UI_Manager_Game : MonoBehaviour {
 	private float scoreScrollbarValue;
 	private float baseLashYPosition;
 
+	private int soundVolume;
+	private int lumVolume;
+
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		scoreScrollbar.value = 0;
 		stacks = 0;
 		score1 = 0;
 		scoreScrollbarValue = 0.0f;
 		baseLashYPosition = lash.rectTransform.localPosition.y;
+
+		optionCanvas.enabled = false;
+		pauseCanvas.enabled = false;
+		gameCanvas.enabled = true;
+
+		soundVolume = 4;
+		lumVolume = 4;
 	}
 	
 	// Update is called once per frame
@@ -52,7 +76,8 @@ public class UI_Manager_Game : MonoBehaviour {
 		}
 	}
 
-	void ColorSwap () {
+	void ColorSwap () 
+	{
 
 		switch (stacks) 
 		{
@@ -83,4 +108,132 @@ public class UI_Manager_Game : MonoBehaviour {
 
 		}
 	}
+
+	public void PauseMode ()
+	{
+		pauseCanvas.enabled = true;
+		gameCanvas.enabled = false;
+		optionCanvas.enabled = false;
+		Time.timeScale = 0;
+	}
+
+	public void UnPauseMode ()
+	{
+		pauseCanvas.enabled = false;
+		gameCanvas.enabled = true;
+		optionCanvas.enabled = false;
+		Time.timeScale = 1;
+	}
+
+	public void OptionMode ()
+	{
+		optionCanvas.enabled = true;
+		gameCanvas.enabled = false;
+		pauseCanvas.enabled = false;
+	}
+
+	public void UnOptionMode ()
+	{
+
+		pauseCanvas.enabled = true;
+		gameCanvas.enabled = false;
+		optionCanvas.enabled = false;
+	}
+
+	public void VolumeChange(bool Positive)
+	{
+		if (Positive) 
+		{
+			soundVolume ++;
+			VolumeRefresh ();
+		}
+		if (!Positive) 
+		{
+			soundVolume --;
+			VolumeRefresh ();
+		}
+		if (soundVolume >= 4) { 
+			soundVolume = 4;
+		}
+		if (soundVolume <= 0) { 
+			soundVolume = 0;
+		}
+
+	}
+	public void LumChange(bool Positive)
+	{
+		if (Positive) 
+		{
+			lumVolume ++;
+			LumRefresh ();
+		}
+		if (!Positive) 
+		{
+			lumVolume --;
+			LumRefresh ();
+		}
+		if (lumVolume >= 4) { 
+			lumVolume = 4;
+		}
+		if (lumVolume <= 0) {
+			lumVolume = 0;
+		}
+
+	}
+
+	public void VolumeRefresh ()
+	{
+		switch (soundVolume) 
+		{
+			case 0 :
+			soundLevel.sprite = lvl0;
+			break;
+
+			case 1 :
+			soundLevel.sprite = lvl1;			
+			break;
+
+			case 2 :
+			soundLevel.sprite = lvl2;			
+			break;
+
+			case 3 :
+			soundLevel.sprite = lvl3;			
+			break;
+
+			case 4 :
+			soundLevel.sprite = lvl4;			
+			break;
+
+		}
+	}
+
+	public void LumRefresh ()
+	{
+		switch (lumVolume) 
+		{
+			case 0 :
+			lumLevel.sprite = lvl0;	
+			break;
+
+			case 1 :
+			lumLevel.sprite = lvl1;			
+			break;
+
+			case 2 :
+			lumLevel.sprite = lvl2;	
+			break;
+
+			case 3 :
+			lumLevel.sprite = lvl3;	
+			break;
+
+			case 4 :
+			lumLevel.sprite = lvl4;	
+			break;
+			
+		}
+		
+	}
+
 }
