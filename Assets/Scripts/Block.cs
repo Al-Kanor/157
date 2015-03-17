@@ -4,12 +4,13 @@ using System.Collections;
 public class Block : MonoBehaviour {
     #region Attributs publics
     public int ores = 0;
-    
+    public GameObject destroyedBlockPrefab;
     public GameObject explosionPrefab;
     public GameObject orePrefab;
     #endregion
 
     #region Attributs privés
+    private Transform blocksContainerTransform;
     #endregion
 
     #region Accesseurs
@@ -27,7 +28,7 @@ public class Block : MonoBehaviour {
             Instantiate (orePrefab, transform.position, Quaternion.identity);
         }
 
-        // Bye bye
+        // Bye
         BlocksManager.Instance.DestroyBlock (gameObject);
     }
     #endregion
@@ -37,8 +38,13 @@ public class Block : MonoBehaviour {
         
     }
 
-    void Start () {
-        
+
+    void Start () 
+	{
+        blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
+
     }
+
+
     #endregion
 }
