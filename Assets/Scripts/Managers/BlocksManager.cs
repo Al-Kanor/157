@@ -25,7 +25,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         GameObject.Destroy (blockObject);
     }
 
-    public void DestroyBlocksAround (Vector3 pos, Dynamite.Type dynamiteType) {
+    public void Detonate (Vector3 pos, Dynamite.Type dynamiteType) {
         Vector2 coords;
         for (float x = pos.x - 1; x <= pos.x + 1; ++x) {
             for (float z = pos.z - 1; z <= pos.z + 1; ++z) {
@@ -34,6 +34,9 @@ public class BlocksManager : Singleton<BlocksManager> {
                     coords = new Vector2 (x, z);
                     if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
                         blockObjects[coords].GetComponent<Block> ().Die ();
+                    }
+                    else if (GameManager.Instance.player.transform.position.x == x && GameManager.Instance.player.transform.position.z == z) {
+                        GameManager.Instance.player.Stuned = true;
                     }
                 }
             }
