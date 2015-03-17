@@ -28,9 +28,7 @@ public class Dynamite : MonoBehaviour {
         GameObject explosion = Instantiate (explosionPrefab, transform.position, Quaternion.identity) as GameObject;
         Destroy (explosion, 2);
 
-        #region Destruction des blocs alentours
         BlocksManager.Instance.DestroyBlocksAround (transform.position, type);
-        #endregion
 
         #region Player stun
         if (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position) <= 1.5f) {

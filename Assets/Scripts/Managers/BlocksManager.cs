@@ -59,7 +59,8 @@ public class BlocksManager : Singleton<BlocksManager> {
                     }
                     else {
                         if (rand < oreBlockProba) {
-                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                            //currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                         }
                         else {
                             currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
@@ -81,14 +82,54 @@ public class BlocksManager : Singleton<BlocksManager> {
             // Move to the left or the right
             for (float z = pos.z - offset; z <= pos.z + offset; ++z) {
                 float originX = dir.x < 0 ? pos.x - offset : pos.x + offset;
-                GenerateBlock (pos, dir, originX, z);
+                GenerateEmptyBlock (pos, dir, originX, z);
             }
         }
         else {
             // Move to the top or the bottom
             for (float x = pos.x - offset; x <= pos.x + offset; ++x) {
                 float originZ = dir.y < 0 ? pos.z - offset : pos.z + offset;
-                GenerateBlock (pos, dir, x, originZ);
+                GenerateEmptyBlock (pos, dir, x, originZ);
+            }
+        }
+        
+        // Chunk ?
+        float cx = pos.x + dir.x * offset * 2;
+        float cz = pos.z + dir.y * offset * 2;
+        Vector2 coords = new Vector2 (cx, cz);
+        int rand;
+        GameObject currentBlock;
+        if (!blockObjects.ContainsKey (coords)) {
+            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+            CreateBlock (currentBlock, cx, cz);
+        }
+
+        if (0 == Random.Range (0, 10)) {
+            rand = Random.Range (0, 100);
+            if (rand < 10) {
+                // Block of 2
+                
+            }
+            else if (rand < 20) {
+                // Block of 3
+            }
+            else if (rand < 45) {
+                // Block of 4
+            }
+            else if (rand < 65) {
+                // Block of 5
+            }
+            else if (rand < 77) {
+                // Block of 6
+            }
+            else if (rand < 87) {
+                // Block of 7
+            }
+            else if (rand < 95) {
+                // Block of 8
+            }
+            else {
+                // Block of 9
             }
         }
     }
@@ -101,7 +142,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         blockObjects.Add (new Vector2 (x, z), blockObject);
     }
 
-    void GenerateBlock (Vector3 pos, Vector3 dir, float x, float z) {
+    void GenerateEmptyBlock (Vector3 pos, Vector3 dir, float x, float z) {
         // Loading
         GameObject currentBlock;
         int rand;
@@ -109,7 +150,8 @@ public class BlocksManager : Singleton<BlocksManager> {
         if (!blockObjects.ContainsKey (coords)) {
             rand = Random.Range (0, 100);
             if (rand < oreBlockProba) {
-                currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                //currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
             }
             else {
                 currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
