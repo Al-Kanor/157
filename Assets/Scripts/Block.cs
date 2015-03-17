@@ -27,7 +27,7 @@ public class Block : MonoBehaviour {
             Instantiate (orePrefab, transform.position, Quaternion.identity);
         }
 
-        // Bye
+        // Bye bye
         BlocksManager.Instance.DestroyBlock (gameObject);
     }
     #endregion
