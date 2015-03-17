@@ -123,14 +123,13 @@ public class Player : MonoBehaviour {
     }
 
     IEnumerator UpdateStun () {
-        //Debug.Log ("stun !");
         stuned = true;
         isStunable = false;
+		transform.GetChild (0).GetComponent<Animation> ().Play ("Stun");
         yield return new WaitForSeconds (stunDuration);
-        //Debug.Log ("Plus stun !");
         stuned = false;
+		transform.GetChild (0).GetComponent<Animation> ().Play ("Look");
         yield return new WaitForSeconds (invincibilityDuration);
-        //Debug.Log ("Plus invincible !");
         isStunable = true;
     }
     #endregion
