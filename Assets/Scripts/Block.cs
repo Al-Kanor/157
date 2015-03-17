@@ -42,8 +42,13 @@ public class Block : MonoBehaviour {
         
     }
 
-    void Start () {
+
+    void Start () 
+	{
         blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
+
     }
+
+
     #endregion
 }

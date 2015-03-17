@@ -7,6 +7,8 @@ public class Dynamite : MonoBehaviour {
     public GameObject explosionPrefab;
     public LayerMask layerMaskPlayer;
     public LayerMask layerMaskBlock;
+
+	float truecooldown=0,maxcooldown=0;
     #endregion
 
     #region Méthodes privées
@@ -40,8 +42,35 @@ public class Dynamite : MonoBehaviour {
 
         Destroy (gameObject);
     }
-    void Start () {
+
+	Material matdynamite;
+
+	float blink=0f;
+
+	public AnimationCurve BlinkSpeed;
+	public Gradient BlinkGradient;
+
+    void Start () 
+	{
+		truecooldown = (float)countdown;
+		maxcooldown = truecooldown;
+
         StartCoroutine ("Boom");
+		matdynamite = (Material)Instantiate(transform.GetChild (0).GetComponent<Renderer> ().material);
+		transform.GetChild(0).GetComponent<Renderer>().material=matdynamite;
     }
+
+	void Update()
+	{
+		truecooldown = Mathf.Max (0f, truecooldown - Time.deltaTime);
+
+		blink = (blink + Time.deltaTime*BlinkSpeed.Evaluate(1f-truecooldown/maxcooldown)) % 1f;
+
+		float lum = 0.5f + Mathf.Sin (blink * Mathf.PI * 2f) * 0.5f;
+
+		matdynamite.SetColor("_EmissionColor",Color.Lerp(Color.black, BlinkGradient.Evaluate(1f-truecooldown/maxcooldown),lum));
+	}
+
+
     #endregion
 }
