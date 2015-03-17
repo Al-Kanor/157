@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
@@ -9,19 +10,33 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
     public GameObject oreBlocPrefab;
+    public GameObject destroyedBlockPrefab;
     #endregion
 
     #region Attributs privés
     private int nbLines = 0;    // Current number of lines of blocks (dynamic)
     private int nbColumns = 0;  // Current number of columns of blocks (dynamic)
-    private int currentId = 1;
+    private Dictionary<Vector2, GameObject> blockObjects;
+    private Transform blocksContainerTransform;
     #endregion
 
     #region Méthodes publiques
+    public void DestroyBlock (GameObject blockObject) {
+        // Instantiate an invisible block for avoid the proccedural generation
+        GameObject destroyedBlockObject = Instantiate (destroyedBlockPrefab, blockObject.transform.position, Quaternion.identity) as GameObject;
+        destroyedBlockObject.transform.parent = blocksContainerTransform;
+        blockObjects[new Vector2 (blockObject.transform.position.x, blockObject.transform.position.z)] = null;
+        GameObject.Destroy (blockObject);
+    }
+
     /*
      * Generates the blocks that are presents at the beginning of the game
      */
     public void GenerateBase () {
+        // Création de la collection de blocs
+        blockObjects = new Dictionary<Vector2, GameObject> ();
+
+        // Génération des blocs de la base
         GameObject currentBlock;
         for (int x = -offset; x <= offset; x++) {
             for (int z = -offset; z <= offset; z++) {
@@ -39,9 +54,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                             currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
                         }
                     }
-                    currentId++;
-                    currentBlock.transform.parent = blocksContainerObject.transform;
-                    currentBlock.transform.localPosition = new Vector3 (x, 0, z);
+                    CreateBlock (currentBlock, x, z);
                 }
             }
         }
@@ -71,26 +84,31 @@ public class BlocksManager : Singleton<BlocksManager> {
     #endregion
 
     #region Méthodes privées
-    private void GenerateBlock (Vector3 pos, Vector3 dir, float x, float z) {
+    void CreateBlock (GameObject blockObject, float x, float z) {
+        blockObject.transform.parent = blocksContainerObject.transform;
+        blockObject.transform.localPosition = new Vector3 (x, 0, z);
+        blockObjects.Add (new Vector2 (x, z), blockObject);
+    }
+
+    void GenerateBlock (Vector3 pos, Vector3 dir, float x, float z) {
+        // Loading
         GameObject currentBlock;
-        RaycastHit hit;
         int rand;
-        if (Physics.Raycast (new Vector3 (x, 3, z), Vector3.down, out hit, 10)) {
-            if ("Ground" == hit.collider.name) {
-                rand = Random.Range (0, 100);
-                if (rand < oreBlockProba) {
-                    currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                }
-                else {
-                    currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
-                }
-                currentBlock.transform.parent = blocksContainerObject.transform;
-                currentBlock.transform.localPosition = new Vector3 (x, 0, z);
+        Vector2 coords = new Vector2 (x, z);
+        if (!blockObjects.ContainsKey (coords)) {
+            rand = Random.Range (0, 100);
+            if (rand < oreBlockProba) {
+                currentBlock = (GameObject)Instantiate (oreBlocPrefab);
             }
-            else if (null != hit.collider.GetComponent<Block> ()) {
-                hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
+            else {
+                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
             }
+            CreateBlock (currentBlock, x, z);
         }
+        else if (null != blockObjects[coords]) {
+            blockObjects[coords].transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
+        }
+
         // Unloading
         if (dir.x != 0) {
             x = dir.x < 0 ? pos.x + offset + 1 : pos.x - offset - 1;
@@ -98,19 +116,14 @@ public class BlocksManager : Singleton<BlocksManager> {
         else {
             z = dir.y < 0 ? pos.z + offset + 1 : pos.z - offset - 1;
         }
-
-        if (Physics.Raycast (new Vector3 (x, 3, z), Vector3.down, out hit, 10)) {
-            if ("Ground" != hit.collider.name) {
-                if (null != hit.collider.GetComponent<Block> ()) {
-                    // It's a blocks ! Desactivation of the renderer
-                    hit.collider.transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
-                }
-                else {
-                    // It's another object (dynamite ?) => bye bye
-                    //Destroy (hit.collider.gameObject);
-                }
-            }
+        coords = new Vector2 (x, z);
+        if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
+            blockObjects[coords].transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
         }
+    }
+
+    void Start () {
+        blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
     }
     #endregion
 }

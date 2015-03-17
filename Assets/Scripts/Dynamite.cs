@@ -32,7 +32,6 @@ public class Dynamite : MonoBehaviour {
         #endregion
 
         #region Player stun
-        Debug.Log (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position));
         if (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position) <= 1.5f) {
             GameManager.Instance.player.Stuned = true;
         }
