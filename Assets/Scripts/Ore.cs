@@ -4,6 +4,7 @@ using System.Collections;
 public class Ore : MonoBehaviour {
     #region Attributs publics
     public float speed = 10;
+	public float rotSpeed = 10;
     #endregion
 
     #region Attributs privés
@@ -21,6 +22,9 @@ public class Ore : MonoBehaviour {
     #endregion
 
     #region Méthodes publiques
+	void Update () {
+		transform.Rotate (Vector3.up, rotSpeed * Time.deltaTime);
+	}
 
     #endregion
 

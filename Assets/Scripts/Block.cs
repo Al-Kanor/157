@@ -28,12 +28,8 @@ public class Block : MonoBehaviour {
             Instantiate (orePrefab, transform.position, Quaternion.identity);
         }
 
-        // Instantiate an invisible block for avoid the proccedural generation
-        GameObject destroyedBlockObject = Instantiate (destroyedBlockPrefab, transform.position, Quaternion.identity) as GameObject;
-        destroyedBlockObject.transform.parent = blocksContainerTransform;
-
         // Bye
-        Destroy (gameObject);
+        BlocksManager.Instance.DestroyBlock (gameObject);
     }
     #endregion
 
@@ -42,8 +38,13 @@ public class Block : MonoBehaviour {
         
     }
 
-    void Start () {
+
+    void Start () 
+	{
         blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
+
     }
+
+
     #endregion
 }
