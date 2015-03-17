@@ -2,6 +2,13 @@
 using System.Collections;
 
 public class Dynamite : MonoBehaviour {
+    #region Enums publics
+    public enum Type {
+        LINEAR, // Les blocs adjacents
+        CLOSE   // Les blocs ajacents + en diagonale
+    }
+    #endregion
+
     #region Attributs publics
     public int countdown = 5;
     public GameObject explosionPrefab;
@@ -11,6 +18,10 @@ public class Dynamite : MonoBehaviour {
 	float truecooldown=0,maxcooldown=0;
     #endregion
 
+    #region Attributs privés
+    public Type type;
+    #endregion
+
     #region Méthodes privées
     IEnumerator Boom () {
         yield return new WaitForSeconds (countdown);
@@ -18,23 +29,10 @@ public class Dynamite : MonoBehaviour {
         Destroy (explosion, 2);
 
         #region Destruction des blocs alentours
-        RaycastHit hit;
-        if (Physics.Raycast (transform.position, Vector3.forward, out hit, 1, layerMaskBlock)) {
-            hit.collider.gameObject.GetComponent<Block> ().Die ();
-        }
-        if (Physics.Raycast (transform.position, -Vector3.forward, out hit, 1, layerMaskBlock)) {
-            hit.collider.gameObject.GetComponent<Block> ().Die ();
-        }
-        if (Physics.Raycast (transform.position, -Vector3.right, out hit, 1, layerMaskBlock)) {
-            hit.collider.gameObject.GetComponent<Block> ().Die ();
-        }
-        if (Physics.Raycast (transform.position, Vector3.right, out hit, 1, layerMaskBlock)) {
-            hit.collider.gameObject.GetComponent<Block> ().Die ();
-        }
+        BlocksManager.Instance.DestroyBlocksAround (transform.position, type);
         #endregion
 
         #region Player stun
-        Debug.Log (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position));
         if (Vector3.Distance (transform.position, GameManager.Instance.player.transform.position) <= 1.5f) {
             GameManager.Instance.player.Stuned = true;
         }
