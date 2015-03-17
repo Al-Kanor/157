@@ -29,8 +29,8 @@ public class BlocksManager : Singleton<BlocksManager> {
         Vector2 coords;
         for (float x = pos.x - 1; x <= pos.x + 1; ++x) {
             for (float z = pos.z - 1; z <= pos.z + 1; ++z) {
-                if (0 == x * z || Dynamite.Type.CLOSE == dynamiteType) {
-                    // x * z = 0 => pas les diagonales
+                if (x == pos.x || z == pos.z || Dynamite.Type.CLOSE == dynamiteType) {
+                    // x == pos.x || z == pos.z => pas les diagonales
                     coords = new Vector2 (x, z);
                     if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
                         blockObjects[coords].GetComponent<Block> ().Die ();
