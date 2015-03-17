@@ -4,8 +4,17 @@ using System.Collections.Generic;
 
 public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
-    public int oreBlockProba = 25;  // Proba of ore block spawn (%)
     public int offset = 7; // Number of lines / columns that must be generated around the player
+    public int oreBlockProba = 10;  // Proba of ore block spawn (%)
+    public int chunkProba = 40;  // Proba of ore block spawn (%)
+    public int chunk2blocksProba = 10;
+    public int chunk3blocksProba = 10;
+    public int chunk4blocksProba = 25;
+    public int chunk5blocksProba = 20;
+    public int chunk6blocksProba = 12;
+    public int chunk7blocksProba = 10;
+    public int chunk8blocksProba = 8;
+    public int chunk9blocksProba = 5;
     public Player player;
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
@@ -62,8 +71,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     }
                     else {
                         if (rand < oreBlockProba) {
-                            //currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                         }
                         else {
                             currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
@@ -81,59 +89,26 @@ public class BlocksManager : Singleton<BlocksManager> {
      * Generate a new line or a new column according the position in parameter
      */
     public void UpdateBlocks (Vector3 pos, Vector3 dir) {
+        bool hasNewBlocks = false;  // Will are there new blocks generated ?
         if (dir.x != 0) {
             // Move to the left or the right
             for (float z = pos.z - offset; z <= pos.z + offset; ++z) {
                 float originX = dir.x < 0 ? pos.x - offset : pos.x + offset;
-                GenerateEmptyBlock (pos, dir, originX, z);
+                hasNewBlocks = GenerateEmptyBlock (pos, dir, originX, z) || hasNewBlocks;
             }
         }
         else {
             // Move to the top or the bottom
             for (float x = pos.x - offset; x <= pos.x + offset; ++x) {
                 float originZ = dir.y < 0 ? pos.z - offset : pos.z + offset;
-                GenerateEmptyBlock (pos, dir, x, originZ);
+                hasNewBlocks = GenerateEmptyBlock (pos, dir, x, originZ) || hasNewBlocks;
             }
         }
         
-        // Chunk ?
-        float cx = pos.x + dir.x * offset * 2;
-        float cz = pos.z + dir.y * offset * 2;
-        Vector2 coords = new Vector2 (cx, cz);
-        int rand;
-        GameObject currentBlock;
-        if (!blockObjects.ContainsKey (coords)) {
-            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-            CreateBlock (currentBlock, cx, cz);
-        }
-
-        if (0 == Random.Range (0, 10)) {
-            rand = Random.Range (0, 100);
-            if (rand < 10) {
-                // Block of 2
-                
-            }
-            else if (rand < 20) {
-                // Block of 3
-            }
-            else if (rand < 45) {
-                // Block of 4
-            }
-            else if (rand < 65) {
-                // Block of 5
-            }
-            else if (rand < 77) {
-                // Block of 6
-            }
-            else if (rand < 87) {
-                // Block of 7
-            }
-            else if (rand < 95) {
-                // Block of 8
-            }
-            else {
-                // Block of 9
-            }
+        // A chunk is generated only if new blocks just generated and according a probability
+        if (hasNewBlocks && Random.Range (0, 100) < chunkProba) {
+            // Ok let's chunk
+            GenerateChunk (pos, dir);
         }
     }
     #endregion
@@ -145,7 +120,114 @@ public class BlocksManager : Singleton<BlocksManager> {
         blockObjects.Add (new Vector2 (x, z), blockObject);
     }
 
-    void GenerateEmptyBlock (Vector3 pos, Vector3 dir, float x, float z) {
+    void GenerateChunk (Vector3 pos, Vector3 dir) {
+        int nbBlocks;
+        int rand;
+        rand = Random.Range (0, 100);
+        int sumProba = 0;
+        if (rand < (sumProba += chunk2blocksProba)) {
+            // Block of 2
+            nbBlocks = 2;
+        }
+        else if (rand < (sumProba += chunk3blocksProba)) {
+            // Block of 3
+            nbBlocks = 2;
+        }
+        else if (rand < (sumProba += chunk4blocksProba)) {
+            // Block of 4
+            nbBlocks = 4;
+        }
+        else if (rand < (sumProba += chunk5blocksProba)) {
+            // Block of 5
+            nbBlocks = 5;
+        }
+        else if (rand < (sumProba += chunk6blocksProba)) {
+            // Block of 6
+            nbBlocks = 6;
+        }
+        else if (rand < (sumProba += chunk7blocksProba)) {
+            // Block of 7
+            nbBlocks = 7;
+        }
+        else if (rand < (sumProba += chunk8blocksProba)) {
+            // Block of 8
+            nbBlocks = 8;
+        }
+        else {
+            // Block of 9
+            nbBlocks = 9;
+        }
+        //Debug.Log (nbBlocks);
+        float x, z;
+        if (dir.x != 0) {
+            x = dir.x < 0 ? pos.x - offset - nbBlocks : pos.x + offset + nbBlocks;
+            z = Random.Range ((int)(pos.z - offset), (int)(pos.z + offset));
+        }
+        else {
+            x = Random.Range ((int)(pos.x - offset), (int)(pos.x + offset));
+            z = dir.y < 0 ? pos.z - offset - nbBlocks : pos.z + offset + nbBlocks;
+        }
+
+        if (blockObjects.ContainsKey (new Vector2 (x, z))) {
+            // Already a chunk here ? No conflit, I give up !
+            return;
+        }
+
+        // Creation of the "pivot block"
+        GameObject currentBlock;
+        currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+        CreateBlock (currentBlock, x, z);
+
+        // Creation of the blocks around
+        for (int i = 0; i < nbBlocks - 1; ++i) {
+            bool blockExist = false;
+            rand = Random.Range (0, 4);
+            switch (rand) {
+                case 0: // Up
+                    if (blockObjects.ContainsKey (new Vector2 (x, z + 1))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    z++;
+                    break;
+                case 1: // Down
+                    if (blockObjects.ContainsKey (new Vector2 (x, z - 1))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    z--;
+                    break;
+                case 2: // Left
+                    if (blockObjects.ContainsKey (new Vector2 (x - 1, z))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    x--;
+                    break;
+                case 3: // Right
+                    if (blockObjects.ContainsKey (new Vector2 (x + 1, z))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    x++;
+                    break;
+            }
+            if (blockExist) {
+                i--;    // Loop again
+            }
+            else {
+                currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                CreateBlock (currentBlock, x, z);
+            }
+        }
+    }
+
+    bool GenerateEmptyBlock (Vector3 pos, Vector3 dir, float x, float z) {
+        bool isBlockGenerated = false; // Will the block finally generated ?
         // Loading
         GameObject currentBlock;
         int rand;
@@ -160,6 +242,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                 currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
             }
             CreateBlock (currentBlock, x, z);
+            isBlockGenerated = true;
         }
         else if (null != blockObjects[coords]) {
             blockObjects[coords].transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = true;
@@ -176,6 +259,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
             blockObjects[coords].transform.GetChild (0).GetComponent<MeshRenderer> ().enabled = false;
         }
+        return isBlockGenerated;
     }
 
     void Start () {
