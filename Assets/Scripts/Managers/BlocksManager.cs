@@ -10,7 +10,6 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
     public GameObject oreBlocPrefab;
-    public GameObject destroyedBlockPrefab;
     #endregion
 
     #region Attributs privés
@@ -22,9 +21,6 @@ public class BlocksManager : Singleton<BlocksManager> {
 
     #region Méthodes publiques
     public void DestroyBlock (GameObject blockObject) {
-        // Instantiate an invisible block for avoid the proccedural generation
-        GameObject destroyedBlockObject = Instantiate (destroyedBlockPrefab, blockObject.transform.position, Quaternion.identity) as GameObject;
-        destroyedBlockObject.transform.parent = blocksContainerTransform;
         blockObjects[new Vector2 (blockObject.transform.position.x, blockObject.transform.position.z)] = null;
         GameObject.Destroy (blockObject);
     }
