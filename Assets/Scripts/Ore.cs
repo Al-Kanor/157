@@ -5,6 +5,7 @@ public class Ore : MonoBehaviour {
     #region Attributs publics
     public float speed = 10;
 	public float rotSpeed = 10;
+	public int oreQuantity; // Valeur du minerai en points.
     #endregion
 
     #region Attributs privés
@@ -34,7 +35,7 @@ public class Ore : MonoBehaviour {
             transform.position = Vector3.Lerp (transform.position, target.position, speed * Time.deltaTime);
             yield return new WaitForEndOfFrame ();
         } while (Vector3.Distance (target.position, transform.position) > 0.1f);
-        GameManager.Instance.Score++;
+		GameManager.Instance.Scoring (oreQuantity);
         Destroy (gameObject);
     }
     #endregion

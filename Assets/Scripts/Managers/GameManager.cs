@@ -7,12 +7,15 @@ public class GameManager : Singleton<GameManager> {
     public int emergencyCountdown = 30;
     public Player player;
     public GameObject emergencyLightPrefab;
+	public float comboTimeMax;
     #endregion
 
     #region Attributs privés
     private int score = 0;
     private float timer;
 	private bool emergency = false;
+	private int comboCounter;
+	private float timerCombo;
     #endregion
 
     #region Accesseurs
@@ -36,6 +39,12 @@ public class GameManager : Singleton<GameManager> {
     IEnumerator UpdateTimer () {
         do {
             timer -= Time.deltaTime;
+			timerCombo += Time.deltaTime;
+
+			if (timerCombo >= comboTimeMax) {
+				comboCounter = 1;
+			}
+
 			if (!emergency && timer <= emergencyCountdown) {
                 Instantiate (emergencyLightPrefab);
 				emergency = true;
@@ -47,4 +56,12 @@ public class GameManager : Singleton<GameManager> {
         } while (true);
     }
     #endregion
+
+	#region Méthodes publiques
+	public void Scoring (int valeur) {
+		timerCombo = 0.0f;
+		score = valeur + comboCounter;
+		comboCounter ++;
+	}
+	#endregion
 }
