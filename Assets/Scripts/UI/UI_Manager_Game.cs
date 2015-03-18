@@ -75,10 +75,6 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 		if (timer2 >= 12.0f) {
 			comboCount = GameManager.Instance.ComboCounter;
 			comboTxt.text = ("x" + comboCount);
-<<<<<<< HEAD
-=======
-			//Debug.Log (timer2);
->>>>>>> origin/master
 		}
 		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
 		scoreScrollbar.size = scoreScrollbarValue;

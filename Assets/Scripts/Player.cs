@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public LayerMask oreMaskBlock;
     public LayerMask dynamiteLayerMask;
     public VehicleScript vehicle = null;
+    public Block exploding = null;
     public Color color1 = new Color(0, 255, 0, 0.5f);
     public Color normalColor = new Color(255, 0, 0, 1);
     public int vehicleBlockLimit = 30;
@@ -93,9 +94,9 @@ public class Player : MonoBehaviour
             return;
         }
 
-		dynamiteRotation.eulerAngles = new Vector3 (0, Random.Range (0, 360), 0);
+        dynamiteRotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
         //GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
-        Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation);
+        Instantiate(dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation);
 
     }
 
@@ -109,17 +110,29 @@ public class Player : MonoBehaviour
 
         #region Mouvement sans véhicule
         RaycastHit hit;
-        if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null) {
-            
-            if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock)) {
-                Debug.Log ("block");
+        if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null)
+        {
+
+            if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
+            {
+                Debug.Log("block");
+
+        
                 if ("Empty Block" == hit.collider.tag)
                 {
-                    hit.collider.gameObject.GetComponent<Block>().Die();
-                    ThrowDynamite();
-                    Move();
-                    transform.GetChild(0).GetComponent<Animation>().Stop();
-                    transform.GetChild(0).GetComponent<Animation>().Play("Blast");
+                   
+                        hit.collider.gameObject.GetComponent<Block>().Die();
+
+                        if (exploding == null)
+                        {
+
+                            ThrowDynamite();
+                            Move();
+                            transform.GetChild(0).GetComponent<Animation>().Stop();
+                            transform.GetChild(0).GetComponent<Animation>().Play("Blast");
+                        }
+                        
+                    
                 }
                 if ("Vehicle Block" == hit.collider.tag)
                 {
@@ -128,12 +141,7 @@ public class Player : MonoBehaviour
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                 }
 
-                if ("Explosive Block" == hit.collider.tag)
-                {
-                    hit.collider.gameObject.GetComponent<Block>().Die();
-                    transform.GetChild(0).GetComponent<Animation>().Stop();
-                    transform.GetChild(0).GetComponent<Animation>().Play("Blast");
-                }
+               
             }
             else
             {
@@ -150,7 +158,7 @@ public class Player : MonoBehaviour
 
         else if (isMovable && !stuned && vehicle != null)
         {
-         
+
             if (needsToBeRed == false)
             {
                 needsToBeRed = true;
@@ -171,7 +179,7 @@ public class Player : MonoBehaviour
                 if ("Vehicle Block" == hit.collider.tag)
                 {
                     //BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
-                    hit.collider.gameObject.GetComponent<Block> ().Die ();
+                    hit.collider.gameObject.GetComponent<Block>().Die();
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                     vehicleBlockCount = vehicleBlockLimit;
@@ -182,6 +190,11 @@ public class Player : MonoBehaviour
                     Move();
                     vehicleBlockCount--; //minerai ici
 
+                }
+                if ("Explosive Block" == hit.collider.tag)
+                {
+                    hit.collider.gameObject.GetComponent<Block>().Die();
+                    vehicleBlockCount--;
                 }
             }
             else
@@ -203,8 +216,8 @@ public class Player : MonoBehaviour
         #endregion
 
 
-        if (vehicle!=null)
-        transform.position = Vector3.Lerp(transform.position, targetPos, vehicleSpeed * Time.deltaTime);
+        if (vehicle != null)
+            transform.position = Vector3.Lerp(transform.position, targetPos, vehicleSpeed * Time.deltaTime);
         else
             transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
 
@@ -215,8 +228,9 @@ public class Player : MonoBehaviour
 
             // Minerai catch
             //RaycastHit hit;
-            if (Physics.Raycast (transform.position - Vector3.up, Vector3.up, out hit, 1, oreMaskBlock)) {
-                hit.collider.GetComponent<Ore> ().Target = transform;
+            if (Physics.Raycast(transform.position - Vector3.up, Vector3.up, out hit, 1, oreMaskBlock))
+            {
+                hit.collider.GetComponent<Ore>().Target = transform;
             }
 
             if (0 == Random.Range(0, 10))
