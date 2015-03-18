@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     #region Attributs publics
     public float speed = 10;
+    public float vehicleSpeed = 20;
     public float stunDuration = 2;
     public float invincibilityDuration = 1;
     public float cameraSpeed = 3;
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour
     public LayerMask dynamiteLayerMask;
     public VehicleScript vehicle = null;
     public Color color1 = new Color(0, 255, 0, 0.5f);
-    public Color normalColor = new Color(0, 0, 0, 0);
+    public Color normalColor = new Color(255, 0, 0, 1);
     public int vehicleBlockLimit = 30;
     public bool needsToBeRed = false;
 
@@ -71,23 +72,7 @@ public class Player : MonoBehaviour
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, y, 0));
 
-        // Minerai catch
-        RaycastHit hit;
-        // Forward
-        if (Physics.Raycast(targetPos, transform.forward, out hit, 1, oreMaskBlock))
-        {
-            hit.collider.GetComponent<Ore>().Target = transform;
-        }
-        // Left
-        if (Physics.Raycast(targetPos, -transform.right, out hit, 1, oreMaskBlock))
-        {
-            hit.collider.GetComponent<Ore>().Target = transform;
-        }
-        // Right
-        if (Physics.Raycast(targetPos, transform.right, out hit, 1, oreMaskBlock))
-        {
-            hit.collider.GetComponent<Ore>().Target = transform;
-        }
+        
 
 
         isMovable = false;
@@ -98,6 +83,7 @@ public class Player : MonoBehaviour
     {
         targetPos = transform.position;
         normalColor = GameManager.Instance.player.transform.FindChild("torche").GetComponent<Light>().color;
+        vehicleBlockCount = vehicleBlockLimit;
 
 
 
@@ -127,8 +113,8 @@ public class Player : MonoBehaviour
 
 
 
+        #region Mouvement sans véhicule
 
-        
 
         RaycastHit hit;
         if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null)
@@ -158,6 +144,10 @@ public class Player : MonoBehaviour
             }
         }
 
+
+        #endregion
+
+        #region Mouvement véhicule
 
         else if (isMovable && !stuned && vehicle != null)
         {
@@ -191,7 +181,7 @@ public class Player : MonoBehaviour
                 {
                     hit.collider.gameObject.GetComponent<Block>().Die();
                     Move();
-                    vehicleBlockCount--;
+                    vehicleBlockCount--; //minerai ici
 
                 }
             }
@@ -202,22 +192,33 @@ public class Player : MonoBehaviour
                 transform.GetChild(0).GetComponent<Animation>().Play("Walk");
                 vehicleBlockCount--;
             }
-            if (vehicleBlockCount < -vehicleBlockLimit)
+            if (vehicleBlockCount < 0)
             {
                 GameManager.Instance.player.transform.FindChild("torche").GetComponent<Light>().color = normalColor;
 
                 vehicle = null;
+                vehicleBlockCount = vehicleBlockLimit;
             }
-           
+
         }
+        #endregion
 
 
+        if (vehicle!=null)
+        transform.position = Vector3.Lerp(transform.position, targetPos, vehicleSpeed * Time.deltaTime);
+        else
+            transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
 
-        transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, targetPos) < 0.05f)
         {
             transform.position = targetPos; // Clamp
+
+            // Minerai catch
+            //RaycastHit hit;
+            if (Physics.Raycast (transform.position - Vector3.up, Vector3.up, out hit, 1, oreMaskBlock)) {
+                hit.collider.GetComponent<Ore> ().Target = transform;
+            }
 
             if (0 == Random.Range(0, 10))
             {

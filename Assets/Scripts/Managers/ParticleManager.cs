@@ -9,14 +9,16 @@ public class ParticleManager : Singleton<ParticleManager> {
     #endregion
 
     #region Attributs privés
-    private GameObject blastObject;
+    private GameObject[] blastObjects;
     private GameObject explosionObject;
+    private int currentBlastIndex = 0;
     #endregion
 
     #region Méthodes publiques
     public void Blast (Vector3 pos) {
-        blastObject.transform.position = pos + Vector3.up * 0;
-        blastObject.GetComponent<ParticleSystem> ().Play ();
+        blastObjects[currentBlastIndex].transform.position = pos + Vector3.up * 0;
+        blastObjects[currentBlastIndex].GetComponent<ParticleSystem> ().Play ();
+        currentBlastIndex = (currentBlastIndex + 1) % 3;
     }
 
     public void Boom (Vector3 pos) {
@@ -29,7 +31,10 @@ public class ParticleManager : Singleton<ParticleManager> {
 
     #region Méthodes privées
     void Start () {
-        blastObject = Instantiate (blastPrefab) as GameObject;
+        blastObjects = new GameObject[3];
+        for (int i = 0; i < 3; ++i) {
+            blastObjects[i] = Instantiate (blastPrefab) as GameObject;
+        }
         explosionObject = Instantiate (explosionPrefab) as GameObject;
         //transform.position += Vector3.up * 10;
     }
