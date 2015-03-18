@@ -6,6 +6,7 @@ public class UI_Manager_Main : MonoBehaviour {
 
 	public Canvas mainMenu;
 	public Canvas optionMenu;
+	public Canvas shopMenu;
 
 	public Image soundLevel;
 	public Image lumLevel;
@@ -22,6 +23,7 @@ public class UI_Manager_Main : MonoBehaviour {
 	void Start () {
 		mainMenu.enabled = true;
 		optionMenu.enabled = false;
+		shopMenu.enabled = false;
 
 		soundVolume = 4;
 		lumVolume = 4;
@@ -42,6 +44,16 @@ public class UI_Manager_Main : MonoBehaviour {
 	public void UnOptionMenu () {
 		mainMenu.enabled = true;
 		optionMenu.enabled = false;
+	}
+
+	public void ShopMenu () {
+		mainMenu.enabled = false;
+		shopMenu.enabled = true;
+	}
+
+	public void UnShopMenu () {
+		mainMenu.enabled = true;
+		shopMenu.enabled = false;
 	}
 
 	public void VolumeChange(bool Positive)
