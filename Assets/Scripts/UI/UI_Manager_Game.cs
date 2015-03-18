@@ -35,7 +35,7 @@ public class UI_Manager_Game : MonoBehaviour {
 	private float score2;
 	private int stacks;
 	private float scoreScrollbarValue;
-	private float baseLashYPosition;
+	private float baseLashXPosition;
 
 	private int soundVolume;
 	private int lumVolume;
@@ -47,7 +47,7 @@ public class UI_Manager_Game : MonoBehaviour {
 		stacks = 0;
 		score1 = 0;
 		scoreScrollbarValue = 0.0f;
-		baseLashYPosition = lash.rectTransform.localPosition.y;
+		baseLashXPosition = lash.rectTransform.localPosition.x;
 
 		optionCanvas.enabled = false;
 		pauseCanvas.enabled = false;
@@ -66,7 +66,7 @@ public class UI_Manager_Game : MonoBehaviour {
 		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
 		scoreScrollbar.size = scoreScrollbarValue;
 		Vector3 newVector = lash.rectTransform.localPosition;
-		newVector.y = (baseLashYPosition - (1.92f*timer2));
+		newVector.x = (baseLashXPosition - (1.92f*timer2));
 		lash.rectTransform.localPosition = newVector;
 		//Debug.Log ("Score = "+ score2);
 		if (score2 > (scroreBarLimit*(stacks+1))) 
