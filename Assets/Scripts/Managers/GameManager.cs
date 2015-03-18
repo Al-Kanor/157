@@ -12,9 +12,9 @@ public class GameManager : Singleton<GameManager> {
 
     #region Attributs privés
     private int score = 0;
+	private int comboCounter = 1;
     private float timer;
 	private bool emergency = false;
-	private int comboCounter;
 	private float timerCombo;
     #endregion
 
@@ -23,6 +23,10 @@ public class GameManager : Singleton<GameManager> {
         get { return score; }
         set { score = value; }
     }
+	public int ComboCounter {
+		get { return comboCounter; }
+		set { comboCounter = value; }
+	}
 
     public float Timer {
         get { return timer; }
@@ -33,6 +37,7 @@ public class GameManager : Singleton<GameManager> {
     void Start () {
         BlocksManager.Instance.GenerateBase ();
         timer = gameDuration;
+		comboCounter = 1;
         StartCoroutine ("UpdateTimer");
     }
 
@@ -41,7 +46,7 @@ public class GameManager : Singleton<GameManager> {
             timer -= Time.deltaTime;
 			timerCombo += Time.deltaTime;
 
-			if (timerCombo >= comboTimeMax) {
+			if (timerCombo >= comboTimeMax && comboCounter != 1) {
 				comboCounter = 1;
 			}
 
@@ -60,7 +65,7 @@ public class GameManager : Singleton<GameManager> {
 	#region Méthodes publiques
 	public void Scoring (int valeur) {
 		timerCombo = 0.0f;
-		score = valeur + comboCounter;
+		score = score + (valeur * comboCounter);
 		comboCounter ++;
 	}
 	#endregion
