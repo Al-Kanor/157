@@ -68,6 +68,16 @@ ModelImporter:
     100120: Object015
     100122: Object016
     100124: Sphere001
+    100126: Group002
+    100128: PhotometricLight006
+    100130: pieceavantbras
+    100132: piecebras
+    100134: piecebras001
+    100136: pieceepaule
+    100138: pieceepaule003
+    100140: pieceepaule004
+    100142: pieceepaule2
+    100144: pioche
     400000: Box001
     400002: Box002
     400004: Box010
@@ -131,6 +141,16 @@ ModelImporter:
     400120: Object015
     400122: Object016
     400124: Sphere001
+    400126: Group002
+    400128: PhotometricLight006
+    400130: pieceavantbras
+    400132: piecebras
+    400134: piecebras001
+    400136: pieceepaule
+    400138: pieceepaule003
+    400140: pieceepaule004
+    400142: pieceepaule2
+    400144: pioche
     2300000: Box001
     2300002: Box002
     2300004: Box010
@@ -169,6 +189,14 @@ ModelImporter:
     2300070: Object015
     2300072: Object016
     2300074: Sphere001
+    2300076: pieceavantbras
+    2300078: piecebras
+    2300080: piecebras001
+    2300082: pieceepaule
+    2300084: pieceepaule003
+    2300086: pieceepaule004
+    2300088: pieceepaule2
+    2300090: pioche
     3300000: Box001
     3300002: Box002
     3300004: Box010
@@ -207,6 +235,14 @@ ModelImporter:
     3300070: Object015
     3300072: Object016
     3300074: Sphere001
+    3300076: pieceavantbras
+    3300078: piecebras
+    3300080: piecebras001
+    3300082: pieceepaule
+    3300084: pieceepaule003
+    3300086: pieceepaule004
+    3300088: pieceepaule2
+    3300090: pioche
     4300000: Box010
     4300002: Object009
     4300004: Cylinder033
@@ -245,6 +281,14 @@ ModelImporter:
     4300070: Cylinder023
     4300072: Cylinder006
     4300074: Sphere001
+    4300076: pieceepaule003
+    4300078: pieceepaule004
+    4300080: piecebras
+    4300082: pieceepaule
+    4300084: pioche
+    4300086: pieceavantbras
+    4300088: piecebras001
+    4300090: pieceepaule2
     7400000: Idle
     7400002: Look
     7400004: Blast
