@@ -19,10 +19,17 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	public Sprite handle_5;
 	public Sprite handle_6;
 
+	public Image tutoActif;
+
+	public Sprite tuto1;
+	public Sprite tuto2;
+	public Sprite tuto3;
+
 	public Canvas pauseCanvas;
 	public Canvas gameCanvas;
 	public Canvas optionCanvas;
 	public Canvas finalCanvas;
+	public Canvas tutoCanvas;
 
 	public Image soundLevel;
 	public Image lumLevel;
@@ -45,6 +52,8 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	private int soundVolume;
 	private int lumVolume;
 
+	private int slide = 1;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -53,13 +62,13 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 		score1 = 0;
 		scoreScrollbarValue = 0.0f;
 		baseLashXPosition = lash.rectTransform.localPosition.x;
-		Time.timeScale = 1;
 
 		optionCanvas.enabled = false;
 		pauseCanvas.enabled = false;
-		gameCanvas.enabled = true;
+		gameCanvas.enabled = false;
 		finalCanvas.enabled = false;
-
+		tutoCanvas.enabled = true;
+		Time.timeScale = 0;
 
 		soundVolume = 4;
 		lumVolume = 4;
@@ -174,6 +183,34 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	{
 		Time.timeScale = 1;
 		Application.LoadLevel ("Main_Menu");
+	}
+	public void TutoMode ()
+	{
+		slide ++;
+		switch (slide) {
+			case 1 :
+				Time.timeScale = 0;
+				tutoActif.sprite = tuto1;
+			break;
+
+			case 2 :
+				tutoActif.sprite = tuto2;
+			break;
+
+			case 3 :
+				tutoActif.sprite = tuto3;
+			break;
+
+			case 4:
+				pauseCanvas.enabled = false;
+				gameCanvas.enabled = true;
+				optionCanvas.enabled = false;
+				finalCanvas.enabled = false;
+				tutoCanvas.enabled = false;
+				Time.timeScale = 1;
+			break;
+		}
+
 	}
 	public void VolumeChange(bool Positive)
 	{

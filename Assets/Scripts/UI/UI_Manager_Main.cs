@@ -25,6 +25,8 @@ public class UI_Manager_Main : MonoBehaviour {
 
 		soundVolume = 4;
 		lumVolume = 4;
+
+		Time.timeScale = 1;
 	}
 	
 
