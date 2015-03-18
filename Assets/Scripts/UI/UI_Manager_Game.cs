@@ -9,6 +9,8 @@ public class UI_Manager_Game : MonoBehaviour {
 	public Image lash;
 	public int scroreBarLimit;
 
+	public Text comboTxt;
+
 	public Sprite handle_1;
 	public Sprite handle_2;
 	public Sprite handle_3;
@@ -36,6 +38,7 @@ public class UI_Manager_Game : MonoBehaviour {
 	private int stacks;
 	private float scoreScrollbarValue;
 	private float baseLashXPosition;
+	private int comboCount;
 
 	private int soundVolume;
 	private int lumVolume;
@@ -63,6 +66,10 @@ public class UI_Manager_Game : MonoBehaviour {
 		score2 = (float)score1;
 		timer1 = GameManager.Instance.Timer ;
 		timer2 = 167.0f - timer1; 
+
+		comboCount = GameManager.Instance.ComboCounter ;
+		comboTxt.text = ("x" + comboCount);
+
 		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
 		scoreScrollbar.size = scoreScrollbarValue;
 		Vector3 newVector = lash.rectTransform.localPosition;
@@ -74,6 +81,7 @@ public class UI_Manager_Game : MonoBehaviour {
 			stacks = stacks +1;
 			ColorSwap ();
 		}
+
 	}
 
 	void ColorSwap () 
