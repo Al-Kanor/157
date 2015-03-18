@@ -67,15 +67,16 @@ public class UI_Manager_Game : MonoBehaviour {
 		timer1 = GameManager.Instance.Timer ;
 		timer2 = 167.0f - timer1; 
 
-		comboCount = GameManager.Instance.ComboCounter ;
-		comboTxt.text = ("x" + comboCount);
-
+		if (timer2 >= 12.0f) {
+			comboCount = GameManager.Instance.ComboCounter;
+			comboTxt.text = ("x" + comboCount);
+			Debug.Log (timer2);
+		}
 		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
 		scoreScrollbar.size = scoreScrollbarValue;
 		Vector3 newVector = lash.rectTransform.localPosition;
 		newVector.x = (baseLashXPosition - (1.92f*timer2));
 		lash.rectTransform.localPosition = newVector;
-		//Debug.Log ("Score = "+ score2);
 		if (score2 > (scroreBarLimit*(stacks+1))) 
 		{
 			stacks = stacks +1;
