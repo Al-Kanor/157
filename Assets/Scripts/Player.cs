@@ -110,8 +110,11 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        dynamiteRotation.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
-        GameObject dynamiteObject = Instantiate(dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
+
+		dynamiteRotation.eulerAngles = new Vector3 (0, Random.Range (0, 360), 0);
+        //GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
+        Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation);
+
     }
 
     void Update()
@@ -178,7 +181,8 @@ public class Player : MonoBehaviour
                 }
                 if ("Vehicle Block" == hit.collider.tag)
                 {
-                    hit.collider.gameObject.GetComponent<Block>().Die();
+                    //BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
+                    hit.collider.gameObject.GetComponent<Block> ().Die ();
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                     vehicleBlockCount = vehicleBlockLimit;
