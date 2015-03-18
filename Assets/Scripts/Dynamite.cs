@@ -25,9 +25,10 @@ public class Dynamite : MonoBehaviour {
     #region Méthodes privées
     IEnumerator Boom () {
         yield return new WaitForSeconds (countdown);
-		Vector3 partpos = new Vector3 (transform.position.x,1.5f,transform.position.z);
+		/*Vector3 partpos = new Vector3 (transform.position.x, 1.5f, transform.position.z);
         GameObject explosion = Instantiate (explosionPrefab, partpos, Quaternion.identity) as GameObject;
-        Destroy (explosion, 2);
+        Destroy (explosion, 2);*/
+        ParticleManager.Instance.Boom (transform.position);
 
         BlocksManager.Instance.Detonate (transform.position, type);
 
@@ -51,11 +52,11 @@ public class Dynamite : MonoBehaviour {
 		transform.GetChild(0).GetComponent<Renderer>().material=matdynamite;
     }
 
-	void Update()
+	void FixedUpdate()
 	{
-		truecooldown = Mathf.Max (0f, truecooldown - Time.deltaTime);
+		truecooldown = Mathf.Max (0f, truecooldown - Time.fixedDeltaTime);
 
-		blink = (blink + Time.deltaTime*BlinkSpeed.Evaluate(1f-truecooldown/maxcooldown)) % 1f;
+        blink = (blink + Time.fixedDeltaTime * BlinkSpeed.Evaluate (1f - truecooldown / maxcooldown)) % 1f;
 
 		float lum = 0.5f + Mathf.Sin (blink * Mathf.PI * 2f) * 0.5f;
 
