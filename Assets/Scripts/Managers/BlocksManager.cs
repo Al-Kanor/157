@@ -48,7 +48,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         {
             Instantiate (vehiclePrefab, blockObject.transform.position, Quaternion.identity);
         }*/
-    
+
         blockObjects[new Vector2 (blockObject.transform.position.x, blockObject.transform.position.z)] = null;
         GameObject.Destroy (blockObject);
     }

@@ -71,23 +71,7 @@ public class Player : MonoBehaviour
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, y, 0));
 
-        // Minerai catch
-        RaycastHit hit;
-        // Forward
-        if (Physics.Raycast(targetPos, transform.forward, out hit, 1, oreMaskBlock))
-        {
-            hit.collider.GetComponent<Ore>().Target = transform;
-        }
-        // Left
-        if (Physics.Raycast(targetPos, -transform.right, out hit, 1, oreMaskBlock))
-        {
-            hit.collider.GetComponent<Ore>().Target = transform;
-        }
-        // Right
-        if (Physics.Raycast(targetPos, transform.right, out hit, 1, oreMaskBlock))
-        {
-            hit.collider.GetComponent<Ore>().Target = transform;
-        }
+        
 
 
         isMovable = false;
@@ -218,6 +202,12 @@ public class Player : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPos) < 0.05f)
         {
             transform.position = targetPos; // Clamp
+
+            // Minerai catch
+            //RaycastHit hit;
+            if (Physics.Raycast (transform.position - Vector3.up, Vector3.up, out hit, 1, oreMaskBlock)) {
+                hit.collider.GetComponent<Ore> ().Target = transform;
+            }
 
             if (0 == Random.Range(0, 10))
             {
