@@ -6,12 +6,12 @@ public class Block : MonoBehaviour {
     public int ores = 0;
     public GameObject destroyedBlockPrefab;
     public GameObject explosionPrefab;
-    public GameObject orePrefab;
-    public GameObject vehiclePrefab;
+    /*public GameObject orePrefab;
+    public GameObject vehiclePrefab;*/
     #endregion
 
     #region Attributs privés
-    private Transform blocksContainerTransform;
+    //private Transform blocksContainerTransform;
     #endregion
 
     #region Accesseurs
@@ -19,6 +19,7 @@ public class Block : MonoBehaviour {
     #endregion
 
     #region Méthodes publiques
+    /*
     public void Die () {
         // Boom !
         GameObject explosion = Instantiate (explosionPrefab, transform.position, Quaternion.identity) as GameObject;
@@ -36,21 +37,10 @@ public class Block : MonoBehaviour {
 
         // Bye
         BlocksManager.Instance.DestroyBlock (gameObject);
-    }
+    }*/
     #endregion
 
     #region Méthodes privées
-    void FixedUpdate () {
-        
-    }
-
-
-    void Start () 
-	{
-        blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
-
-    }
-
 
     #endregion
 }

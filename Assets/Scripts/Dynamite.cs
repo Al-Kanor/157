@@ -25,9 +25,10 @@ public class Dynamite : MonoBehaviour {
     #region Méthodes privées
     IEnumerator Boom () {
         yield return new WaitForSeconds (countdown);
-		Vector3 partpos = new Vector3 (transform.position.x,1.5f,transform.position.z);
+		/*Vector3 partpos = new Vector3 (transform.position.x, 1.5f, transform.position.z);
         GameObject explosion = Instantiate (explosionPrefab, partpos, Quaternion.identity) as GameObject;
-        Destroy (explosion, 2);
+        Destroy (explosion, 2);*/
+        BoomManager.Instance.Boom (transform.position);
 
         BlocksManager.Instance.Detonate (transform.position, type);
 

@@ -21,17 +21,33 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject emptyBlocPrefab;
     public GameObject oreBlocPrefab;
     public GameObject vehicleBlockPrefab;
+    public GameObject orePrefab;
+    public GameObject vehiclePrefab;
     #endregion
 
     #region Attributs privés
-    private int nbLines = 0;    // Current number of lines of blocks (dynamic)
-    private int nbColumns = 0;  // Current number of columns of blocks (dynamic)
+    //private int nbLines = 0;    // Current number of lines of blocks (dynamic)
+    //private int nbColumns = 0;  // Current number of columns of blocks (dynamic)
     private Dictionary<Vector2, GameObject> blockObjects;
-    private Transform blocksContainerTransform;
+    //private Transform blocksContainerTransform;
     #endregion
 
     #region Méthodes publiques
     public void DestroyBlock (GameObject blockObject) {
+        // Boom !
+        /*GameObject explosion = Instantiate (explosionPrefab, transform.position, Quaternion.identity) as GameObject;
+        Destroy (explosion, 2);*/
+
+        // Ore
+        if (null != orePrefab) {
+            Instantiate (orePrefab, blockObject.transform.position, Quaternion.identity);
+        }
+
+        if (null != vehiclePrefab)
+        {
+            Instantiate (vehiclePrefab, blockObject.transform.position, Quaternion.identity);
+        }
+    
         blockObjects[new Vector2 (blockObject.transform.position.x, blockObject.transform.position.z)] = null;
         GameObject.Destroy (blockObject);
     }
@@ -44,7 +60,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     // x == pos.x || z == pos.z => pas les diagonales
                     coords = new Vector2 (x, z);
                     if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
-                        blockObjects[coords].GetComponent<Block> ().Die ();
+                        DestroyBlock (blockObjects[coords]);
                     }
                     else if (GameManager.Instance.player.transform.position.x == x && GameManager.Instance.player.transform.position.z == z) {
                         GameManager.Instance.player.Stuned = true;
@@ -69,22 +85,22 @@ public class BlocksManager : Singleton<BlocksManager> {
                     int rand = Random.Range (0, 100);
                     if (1 == Mathf.Abs (x + z)) {
                         // Blocks that directly sourround the player must be blastable
-                        currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                        currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
                     }
                     else {
                         if (rand < oreBlockProba) {
-                            currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                            currentBlock = Instantiate (oreBlocPrefab) as GameObject;
                         }
                         else {
-                            currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                            currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
                         }
                     }
                     CreateBlock (currentBlock, x, z);
                 }
             }
         }
-        nbLines = 2 * offset + 1;
-        nbColumns = 2 * offset + 1;
+        //nbLines = 2 * offset + 1;
+        //nbColumns = 2 * offset + 1;
     }
 
     /*
@@ -236,17 +252,12 @@ public class BlocksManager : Singleton<BlocksManager> {
         Vector2 coords = new Vector2 (x, z);
         if (!blockObjects.ContainsKey (coords)) {
             rand = Random.Range (0, 100);
-            if(rand<vehicleBlockProba)
+            if(rand < vehicleBlockProba)
             {
-                currentBlock = (GameObject)Instantiate(vehicleBlockPrefab);
-            }
-
-            else if (rand < oreBlockProba) {
-                //currentBlock = (GameObject)Instantiate (oreBlocPrefab);
-                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                currentBlock = Instantiate(vehicleBlockPrefab) as GameObject;
             }
             else {
-                currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
+                currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
             }
             CreateBlock (currentBlock, x, z);
             isBlockGenerated = true;
@@ -270,7 +281,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     }
 
     void Start () {
-        blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
+        //blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
     }
     #endregion
 }
