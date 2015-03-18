@@ -8,7 +8,8 @@ public class BlocksManager : Singleton<BlocksManager> {
     public int oreBlockProba = 10;  // Proba of ore block spawn (%) in the base
     public float vehicleBlockProba = 0.5f; // Proba of vehicle blocks spawning (%)
     public float explosiveBlockProba = 20f; //Proba of explosive blocks spawning
-    public int chunkProba = 40;  // Proba of ore block spawn (%)
+    public int chunkProba = 40;
+    public int undestructibleChunkProba = 10;
     public int chunkOre1proba = 60;
     public int chunkOre2proba = 30;
     public int chunkOre3proba = 10;
@@ -29,6 +30,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject ore1BlocPrefab;
     public GameObject ore2BlocPrefab;
     public GameObject ore3BlocPrefab;
+    public GameObject undestructibleBlockPrefab;
     public GameObject vehicleBlockPrefab;
     //public GameObject orePrefab;
     //public GameObject vehiclePrefab;
@@ -73,8 +75,10 @@ public class BlocksManager : Singleton<BlocksManager> {
                     coords = new Vector2 (x, z);
                     if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
                         //DestroyBlock (blockObjects[coords]);
-                        blockObjects[coords].GetComponent<Block>().Die ();
-                    
+
+                        if ("Undestructible Block" != blockObjects[coords].tag) {
+                            blockObjects[coords].GetComponent<Block> ().Die ();
+                        }
                     }
                     else if (GameManager.Instance.player.transform.position.x == x && GameManager.Instance.player.transform.position.z == z) {
                         GameManager.Instance.player.Stuned = true;
@@ -140,8 +144,6 @@ public class BlocksManager : Singleton<BlocksManager> {
                 }
             }
         }
-        //nbLines = 2 * offset + 1;
-        //nbColumns = 2 * offset + 1;
     }
 
     /*
@@ -169,6 +171,9 @@ public class BlocksManager : Singleton<BlocksManager> {
             // Ok let's chunk
             GenerateChunk (pos, dir);
         }
+        else if (hasNewBlocks && Random.Range (0, 100) < undestructibleChunkProba) {
+            GenerateUndestructibleChunk (pos, dir);
+        }
     }
     #endregion
 
@@ -177,6 +182,112 @@ public class BlocksManager : Singleton<BlocksManager> {
         blockObject.transform.parent = blocksContainerObject.transform;
         blockObject.transform.localPosition = new Vector3 (x, 0, z);
         blockObjects.Add (new Vector2 (x, z), blockObject);
+    }
+
+    void GenerateUndestructibleChunk (Vector3 pos, Vector3 dir) {
+        // How much blocks in the chunk ?
+        int nbBlocks;
+        int rand;
+        rand = Random.Range (0, 100);
+        int sumProba = 0;
+        if (rand < (sumProba += chunk2blocksProba)) {
+            // Block of 2
+            nbBlocks = 2;
+        }
+        else if (rand < (sumProba += chunk3blocksProba)) {
+            // Block of 3
+            nbBlocks = 2;
+        }
+        else if (rand < (sumProba += chunk4blocksProba)) {
+            // Block of 4
+            nbBlocks = 4;
+        }
+        else if (rand < (sumProba += chunk5blocksProba)) {
+            // Block of 5
+            nbBlocks = 5;
+        }
+        else if (rand < (sumProba += chunk6blocksProba)) {
+            // Block of 6
+            nbBlocks = 6;
+        }
+        else if (rand < (sumProba += chunk7blocksProba)) {
+            // Block of 7
+            nbBlocks = 7;
+        }
+        else if (rand < (sumProba += chunk8blocksProba)) {
+            // Block of 8
+            nbBlocks = 8;
+        }
+        else {
+            // Block of 9
+            nbBlocks = 9;
+        }
+
+        float x, z;
+        if (dir.x != 0) {
+            x = dir.x < 0 ? pos.x - offset - nbBlocks : pos.x + offset + nbBlocks;
+            z = Random.Range ((int)(pos.z - offset), (int)(pos.z + offset));
+        }
+        else {
+            x = Random.Range ((int)(pos.x - offset), (int)(pos.x + offset));
+            z = dir.y < 0 ? pos.z - offset - nbBlocks : pos.z + offset + nbBlocks;
+        }
+
+        if (blockObjects.ContainsKey (new Vector2 (x, z))) {
+            // Already a chunk here ? No conflict, I give up !
+            return;
+        }
+
+        // Creation of the "pivot block"
+        GameObject currentBlock = (GameObject)Instantiate (undestructibleBlockPrefab);
+        CreateBlock (currentBlock, x, z);
+
+        // Creation of the blocks around
+        for (int i = 0; i < nbBlocks - 1; ++i) {
+            bool blockExist = false;
+            rand = Random.Range (0, 4);
+            switch (rand) {
+                case 0: // Up
+                    if (blockObjects.ContainsKey (new Vector2 (x, z + 1))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    z++;
+                    break;
+                case 1: // Down
+                    if (blockObjects.ContainsKey (new Vector2 (x, z - 1))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    z--;
+                    break;
+                case 2: // Left
+                    if (blockObjects.ContainsKey (new Vector2 (x - 1, z))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    x--;
+                    break;
+                case 3: // Right
+                    if (blockObjects.ContainsKey (new Vector2 (x + 1, z))) {
+                        // Already a block here
+                        blockExist = true;
+                        break;
+                    }
+                    x++;
+                    break;
+            }
+            if (blockExist) {
+                i--;    // Loop again
+            }
+            else {
+                currentBlock = (GameObject)Instantiate (undestructibleBlockPrefab);
+                CreateBlock (currentBlock, x, z);
+            }
+        }
     }
 
     void GenerateChunk (Vector3 pos, Vector3 dir) {
