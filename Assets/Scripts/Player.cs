@@ -135,6 +135,13 @@ public class Player : MonoBehaviour
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                 }
+
+                if ("Explosive Block" == hit.collider.tag)
+                {
+                    hit.collider.gameObject.GetComponent<Block>().Die();
+                    transform.GetChild(0).GetComponent<Animation>().Stop();
+                    transform.GetChild(0).GetComponent<Animation>().Play("Blast");
+                }
             }
             else
             {
@@ -151,7 +158,7 @@ public class Player : MonoBehaviour
 
         else if (isMovable && !stuned && vehicle != null)
         {
-            Debug.Log(vehicleBlockCount);
+         
             if (needsToBeRed == false)
             {
                 needsToBeRed = true;

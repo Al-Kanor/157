@@ -7,6 +7,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     public int offset = 7; // Number of lines / columns that must be generated around the player
     public int oreBlockProba = 10;  // Proba of ore block spawn (%) in the base
     public float vehicleBlockProba = 0.5f; // Proba of vehicle blocks spawning (%)
+    public float explosiveBlockProba = 20f; //Proba of explosive blocks spawning
     public int chunkProba = 40;  // Proba of ore block spawn (%)
     public int chunkOre1proba = 60;
     public int chunkOre2proba = 30;
@@ -24,6 +25,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     public Player player;
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
+    public GameObject explosiveBlockPrefab;
     public GameObject ore1BlocPrefab;
     public GameObject ore2BlocPrefab;
     public GameObject ore3BlocPrefab;
@@ -61,7 +63,8 @@ public class BlocksManager : Singleton<BlocksManager> {
         GameObject.Destroy (blockObject);
     }
 
-    public void Detonate (Vector3 pos, Dynamite.Type dynamiteType) {
+    public void Detonate (Vector3 pos, Dynamite.Type dynamiteType) 
+    {
         Vector2 coords;
         for (float x = pos.x - 1; x <= pos.x + 1; ++x) {
             for (float z = pos.z - 1; z <= pos.z + 1; ++z) {
@@ -70,7 +73,8 @@ public class BlocksManager : Singleton<BlocksManager> {
                     coords = new Vector2 (x, z);
                     if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
                         //DestroyBlock (blockObjects[coords]);
-                        blockObjects[coords].GetComponent<Block> ().Die ();
+                        blockObjects[coords].GetComponent<Block>().Die ();
+                    
                     }
                     else if (GameManager.Instance.player.transform.position.x == x && GameManager.Instance.player.transform.position.z == z) {
                         GameManager.Instance.player.Stuned = true;
@@ -79,6 +83,33 @@ public class BlocksManager : Singleton<BlocksManager> {
             }
         }
     }
+
+
+
+     public void BlockDetonate(Vector3 pos, Block.Type dynamiteType)
+     {
+         Vector2 coords;
+         for (float x = pos.x - 1; x <= pos.x + 1; ++x)
+         {
+             for (float z = pos.z - 1; z <= pos.z + 1; ++z)
+             {
+                 if (x == pos.x || z == pos.z || Block.Type.CLOSE == dynamiteType)
+                 {
+                     // x == pos.x || z == pos.z => pas les diagonales
+                     coords = new Vector2(x, z);
+                     if (blockObjects.ContainsKey(coords) && null != blockObjects[coords])
+                     {
+                         //DestroyBlock (blockObjects[coords]);
+                         blockObjects[coords].GetComponent<Block>().Die();
+                     }
+                     else if (GameManager.Instance.player.transform.position.x == x && GameManager.Instance.player.transform.position.z == z)
+                     {
+                         GameManager.Instance.player.Stuned = true;
+                     }
+                 }
+             }
+         }
+     }
 
     /*
      * Generates the blocks that are presents at the beginning of the game
@@ -286,13 +317,16 @@ public class BlocksManager : Singleton<BlocksManager> {
         Vector2 coords = new Vector2 (x, z);
         if (!blockObjects.ContainsKey (coords)) {
             rand = Random.Range (0, 100);
+            
             if(rand < vehicleBlockProba && emptyBlocks<=0)
             {
                 emptyBlocks = emptyBlocksForVehicle;
                 currentBlock = Instantiate(vehicleBlockPrefab) as GameObject;
             }
-            else {
-                currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
+
+            else
+            {
+                currentBlock = Instantiate(emptyBlocPrefab) as GameObject;
                 emptyBlocks--;
             }
             CreateBlock (currentBlock, x, z);
