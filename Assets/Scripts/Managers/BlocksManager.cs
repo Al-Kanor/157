@@ -258,7 +258,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     break;
             }
             if (blockExist) {
-                if (hack > 10) {
+                if (hack > 100) {
                     return;
                 }
                 i--;    // Loop again
@@ -388,7 +388,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     break;
             }
             if (blockExist) {
-                if (hack > 10) {
+                if (hack > 100) {
                     return;
                 }
                 i--;    // Loop again

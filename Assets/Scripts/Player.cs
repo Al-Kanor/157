@@ -62,6 +62,21 @@ public class Player : MonoBehaviour
     #region Méthodes privées
     void Move()
     {
+        // Minerai catch before movement
+        RaycastHit hit;
+        // Forward
+        if (Physics.Raycast (targetPos, transform.forward, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        // Left
+        if (Physics.Raycast (targetPos, -transform.right, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        // Right
+        if (Physics.Raycast (targetPos, transform.right, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        
         targetPos += new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y);
 
         // Rotation
@@ -71,6 +86,20 @@ public class Player : MonoBehaviour
             y = 180;
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, y, 0));
+
+        // Minerai catch after movement
+        // Forward
+        if (Physics.Raycast (targetPos, transform.forward, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        // Left
+        if (Physics.Raycast (targetPos, -transform.right, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
+        // Right
+        if (Physics.Raycast (targetPos, transform.right, out hit, 1, oreMaskBlock)) {
+            hit.collider.GetComponent<Ore> ().Target = transform;
+        }
 
         isMovable = false;
         BlocksManager.Instance.UpdateBlocks(targetPos, TouchManager.Instance.SwipeAxis);
@@ -227,6 +256,7 @@ public class Player : MonoBehaviour
             transform.position = targetPos; // Clamp
 
             // Minerai catch
+            /*
             //RaycastHit hit;
             if (Physics.Raycast(transform.position - Vector3.up, Vector3.up, out hit, 1, oreMaskBlock))
             {
@@ -241,7 +271,7 @@ public class Player : MonoBehaviour
             {
                 transform.GetChild(0).GetComponent<Animation>().PlayQueued("Idle");
             }
-
+            */
             isMovable = true;
         }
 
