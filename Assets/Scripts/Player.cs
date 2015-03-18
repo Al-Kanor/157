@@ -82,16 +82,16 @@ public class Player : MonoBehaviour {
             return;
         }
 		dynamiteRotation.eulerAngles = new Vector3 (0, Random.Range (0, 360), 0);
-        GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
+        //GameObject dynamiteObject = Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation) as GameObject;
+        Instantiate (dynamitePrefab, transform.position - Vector3.up / 2, dynamiteRotation);
     }
 
     void Update() {
         RaycastHit hit;
         if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
-            if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
-            {
+            if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock)) {
                 if ("Empty Block" == hit.collider.tag) {
-                    hit.collider.gameObject.GetComponent<Block> ().Die ();
+                    BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
                     ThrowDynamite ();
                     Move ();
                     transform.GetChild (0).GetComponent<Animation> ().Stop ();
@@ -99,7 +99,7 @@ public class Player : MonoBehaviour {
                 }
                 if ("Vehicle Block" == hit.collider.tag)
                 {
-                    hit.collider.gameObject.GetComponent<Block>().Die();
+                    BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                 }
