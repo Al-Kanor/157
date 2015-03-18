@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
     public int offset = 7; // Number of lines / columns that must be generated around the player
-    public int oreBlockProba = 10;  // Proba of ore block spawn (%)
+    public int oreBlockProba = 10;  // Proba of ore block spawn (%) in the base
     public float vehicleBlockProba = 0.5f; // Proba of vehicle blocks spawning (%)
     public int chunkProba = 40;  // Proba of ore block spawn (%)
     public int chunk2blocksProba = 10;
@@ -21,7 +21,9 @@ public class BlocksManager : Singleton<BlocksManager> {
     public Player player;
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
-    public GameObject oreBlocPrefab;
+    public GameObject ore1BlocPrefab;
+    public GameObject ore2BlocPrefab;
+    public GameObject ore3BlocPrefab;
     public GameObject vehicleBlockPrefab;
     //public GameObject orePrefab;
     //public GameObject vehiclePrefab;
@@ -94,7 +96,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     }
                     else {
                         if (rand < oreBlockProba) {
-                            currentBlock = Instantiate (oreBlocPrefab) as GameObject;
+                            currentBlock = Instantiate (ore1BlocPrefab) as GameObject;
                         }
                         else {
                             currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
@@ -144,6 +146,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     }
 
     void GenerateChunk (Vector3 pos, Vector3 dir) {
+        // How much blocks in the chunk ?
         int nbBlocks;
         int rand;
         rand = Random.Range (0, 100);
@@ -180,7 +183,10 @@ public class BlocksManager : Singleton<BlocksManager> {
             // Block of 9
             nbBlocks = 9;
         }
-        //Debug.Log (nbBlocks);
+        
+        // What type of ore ?
+        int oreType = Random.Range (0, 3);
+        
         float x, z;
         if (dir.x != 0) {
             x = dir.x < 0 ? pos.x - offset - nbBlocks : pos.x + offset + nbBlocks;
@@ -197,8 +203,13 @@ public class BlocksManager : Singleton<BlocksManager> {
         }
 
         // Creation of the "pivot block"
-        GameObject currentBlock;
-        currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+        GameObject currentBlock = null;
+        switch (oreType) {
+            case 0: currentBlock = (GameObject)Instantiate (ore1BlocPrefab); break;
+            case 1: currentBlock = (GameObject)Instantiate (ore2BlocPrefab); break;
+            case 2: currentBlock = (GameObject)Instantiate (ore3BlocPrefab); break;
+        }
+        
         CreateBlock (currentBlock, x, z);
 
         // Creation of the blocks around
@@ -243,7 +254,12 @@ public class BlocksManager : Singleton<BlocksManager> {
                 i--;    // Loop again
             }
             else {
-                currentBlock = (GameObject)Instantiate (oreBlocPrefab);
+                switch (oreType) {
+                    case 0: currentBlock = (GameObject)Instantiate (ore1BlocPrefab); break;
+                    case 1: currentBlock = (GameObject)Instantiate (ore2BlocPrefab); break;
+                    case 2: currentBlock = (GameObject)Instantiate (ore3BlocPrefab); break;
+                }
+                
                 CreateBlock (currentBlock, x, z);
             }
         }
