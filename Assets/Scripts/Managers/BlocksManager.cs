@@ -6,7 +6,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
     public int offset = 7; // Number of lines / columns that must be generated around the player
     public int oreBlockProba = 10;  // Proba of ore block spawn (%)
-    public int vehicleBlockProba = 5; // Proba of vehicle blocks spawning (%)
+    public float vehicleBlockProba = 0.5f; // Proba of vehicle blocks spawning (%)
     public int chunkProba = 40;  // Proba of ore block spawn (%)
     public int chunk2blocksProba = 10;
     public int chunk3blocksProba = 10;
@@ -16,6 +16,8 @@ public class BlocksManager : Singleton<BlocksManager> {
     public int chunk7blocksProba = 10;
     public int chunk8blocksProba = 8;
     public int chunk9blocksProba = 5;
+    public int emptyBlocksForVehicle = 30;
+    
     public Player player;
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
@@ -29,6 +31,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     //private int nbLines = 0;    // Current number of lines of blocks (dynamic)
     //private int nbColumns = 0;  // Current number of columns of blocks (dynamic)
     private Dictionary<Vector2, GameObject> blockObjects;
+    private int emptyBlocks = 0;
     //private Transform blocksContainerTransform;
     #endregion
 
@@ -254,12 +257,14 @@ public class BlocksManager : Singleton<BlocksManager> {
         Vector2 coords = new Vector2 (x, z);
         if (!blockObjects.ContainsKey (coords)) {
             rand = Random.Range (0, 100);
-            if(rand < vehicleBlockProba)
+            if(rand < vehicleBlockProba && emptyBlocks<=0)
             {
+                emptyBlocks = emptyBlocksForVehicle;
                 currentBlock = Instantiate(vehicleBlockPrefab) as GameObject;
             }
             else {
                 currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
+                emptyBlocks--;
             }
             CreateBlock (currentBlock, x, z);
             isBlockGenerated = true;
@@ -284,6 +289,7 @@ public class BlocksManager : Singleton<BlocksManager> {
 
     void Start () {
         //blocksContainerTransform = GameObject.Find ("BlocksContainer").transform;
+        emptyBlocks = emptyBlocksForVehicle;
     }
     #endregion
 }
