@@ -91,7 +91,8 @@ public class Player : MonoBehaviour {
         if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.DoubleTap) {
             if (Physics.Raycast (targetPos, new Vector3 (TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock)) {
                 if ("Empty Block" == hit.collider.tag) {
-                    BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
+                    //BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
+                    hit.collider.gameObject.GetComponent<Block> ().Die ();
                     ThrowDynamite ();
                     Move ();
                     transform.GetChild (0).GetComponent<Animation> ().Stop ();
@@ -99,7 +100,8 @@ public class Player : MonoBehaviour {
                 }
                 if ("Vehicle Block" == hit.collider.tag)
                 {
-                    BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
+                    //BlocksManager.Instance.DestroyBlock (hit.collider.gameObject);
+                    hit.collider.gameObject.GetComponent<Block> ().Die ();
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                 }

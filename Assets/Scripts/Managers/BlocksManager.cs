@@ -21,8 +21,8 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject emptyBlocPrefab;
     public GameObject oreBlocPrefab;
     public GameObject vehicleBlockPrefab;
-    public GameObject orePrefab;
-    public GameObject vehiclePrefab;
+    //public GameObject orePrefab;
+    //public GameObject vehiclePrefab;
     #endregion
 
     #region Attributs privés
@@ -37,16 +37,17 @@ public class BlocksManager : Singleton<BlocksManager> {
         // Boom !
         /*GameObject explosion = Instantiate (explosionPrefab, transform.position, Quaternion.identity) as GameObject;
         Destroy (explosion, 2);*/
+        //BoomManager.Instance.Boom (transform.position);
 
         // Ore
-        if (null != orePrefab) {
+        /*if (null != orePrefab) {
             Instantiate (orePrefab, blockObject.transform.position, Quaternion.identity);
         }
 
         if (null != vehiclePrefab)
         {
             Instantiate (vehiclePrefab, blockObject.transform.position, Quaternion.identity);
-        }
+        }*/
     
         blockObjects[new Vector2 (blockObject.transform.position.x, blockObject.transform.position.z)] = null;
         GameObject.Destroy (blockObject);
@@ -60,7 +61,8 @@ public class BlocksManager : Singleton<BlocksManager> {
                     // x == pos.x || z == pos.z => pas les diagonales
                     coords = new Vector2 (x, z);
                     if (blockObjects.ContainsKey (coords) && null != blockObjects[coords]) {
-                        DestroyBlock (blockObjects[coords]);
+                        //DestroyBlock (blockObjects[coords]);
+                        blockObjects[coords].GetComponent<Block> ().Die ();
                     }
                     else if (GameManager.Instance.player.transform.position.x == x && GameManager.Instance.player.transform.position.z == z) {
                         GameManager.Instance.player.Stuned = true;

@@ -4,10 +4,10 @@ using System.Collections;
 public class Block : MonoBehaviour {
     #region Attributs publics
     public int ores = 0;
-    public GameObject destroyedBlockPrefab;
-    public GameObject explosionPrefab;
-    /*public GameObject orePrefab;
-    public GameObject vehiclePrefab;*/
+    //public GameObject destroyedBlockPrefab;
+    //public GameObject explosionPrefab;
+    public GameObject orePrefab;
+    public GameObject vehiclePrefab;
     #endregion
 
     #region Attributs privés
@@ -19,11 +19,12 @@ public class Block : MonoBehaviour {
     #endregion
 
     #region Méthodes publiques
-    /*
+    
     public void Die () {
         // Boom !
-        GameObject explosion = Instantiate (explosionPrefab, transform.position, Quaternion.identity) as GameObject;
-        Destroy (explosion, 2);
+        //GameObject explosion = Instantiate (explosionPrefab, transform.position, Quaternion.identity) as GameObject;
+        //Destroy (explosion, 2);
+        ParticleManager.Instance.Blast (transform.position);
 
         // Ore
         if (null != orePrefab) {
@@ -32,12 +33,12 @@ public class Block : MonoBehaviour {
 
         if (null != vehiclePrefab)
         {
-            Instantiate(vehiclePrefab, transform.position, Quaternion.identity);
+            Instantiate (vehiclePrefab, transform.position, Quaternion.identity);
         }
 
         // Bye
         BlocksManager.Instance.DestroyBlock (gameObject);
-    }*/
+    }
     #endregion
 
     #region Méthodes privées
