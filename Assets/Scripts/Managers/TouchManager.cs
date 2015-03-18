@@ -14,9 +14,13 @@ public class TouchManager : Singleton<TouchManager>
     public float TouchSwipeTolerance = 1f;
     public float MouseSwipeTolerance = 0.5f;
     public float DoubleTapWait = 0.5f;
+    
+   
 
     void Update()
     {
+       
+
         if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
             if (Input.touchCount > 0)
@@ -86,31 +90,40 @@ public class TouchManager : Singleton<TouchManager>
 
                 }
             }
-            
+
             if ((Input.touchCount > 0 && (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)) || Input.GetMouseButtonUp(0))
             {
                 if (timer <= 0)
                 {
-                    CheckDoubleTap();
+                    //CheckDoubleTap();
                 }
                 CheckSwips = true;
             }
         }
     }
 
+
+
     void LateUpdate()
     {
-        HandleGesture();
+            HandleGesture();
     }
 
     public void HandleGesture()
     {
-        if (CurrentGesture != Gestures.None)
-            CurrentGesture = Gestures.None;
+       if (CurrentGesture != Gestures.None)
+       {
+               
+                CurrentGesture = Gestures.None;
+          
+       }
+           
     }
 
 
-   void CheckDoubleTap()
+    /*
+    
+    void CheckDoubleTap()
     {
         StopAllCoroutines();
         StartCoroutine(DoubleTap());
@@ -132,5 +145,7 @@ public class TouchManager : Singleton<TouchManager>
             }
             yield return new WaitForEndOfFrame();
         }
-    }
+    }*/
+
+
 }
