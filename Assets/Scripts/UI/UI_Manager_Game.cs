@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class UI_Manager_Game : MonoBehaviour {
+public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 
 	public Scrollbar scoreScrollbar;
 	public Image scrollBarHandle;
@@ -10,6 +10,7 @@ public class UI_Manager_Game : MonoBehaviour {
 	public int scroreBarLimit;
 
 	public Text comboTxt;
+	public Text finalScoreTxt;
 
 	public Sprite handle_1;
 	public Sprite handle_2;
@@ -21,6 +22,7 @@ public class UI_Manager_Game : MonoBehaviour {
 	public Canvas pauseCanvas;
 	public Canvas gameCanvas;
 	public Canvas optionCanvas;
+	public Canvas finalCanvas;
 
 	public Image soundLevel;
 	public Image lumLevel;
@@ -51,10 +53,13 @@ public class UI_Manager_Game : MonoBehaviour {
 		score1 = 0;
 		scoreScrollbarValue = 0.0f;
 		baseLashXPosition = lash.rectTransform.localPosition.x;
+		Time.timeScale = 1;
 
 		optionCanvas.enabled = false;
 		pauseCanvas.enabled = false;
 		gameCanvas.enabled = true;
+		finalCanvas.enabled = false;
+
 
 		soundVolume = 4;
 		lumVolume = 4;
@@ -70,7 +75,10 @@ public class UI_Manager_Game : MonoBehaviour {
 		if (timer2 >= 12.0f) {
 			comboCount = GameManager.Instance.ComboCounter;
 			comboTxt.text = ("x" + comboCount);
+<<<<<<< HEAD
+=======
 			//Debug.Log (timer2);
+>>>>>>> origin/master
 		}
 		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
 		scoreScrollbar.size = scoreScrollbarValue;
@@ -123,6 +131,7 @@ public class UI_Manager_Game : MonoBehaviour {
 		pauseCanvas.enabled = true;
 		gameCanvas.enabled = false;
 		optionCanvas.enabled = false;
+		finalCanvas.enabled = false;
 		Time.timeScale = 0;
 	}
 
@@ -131,6 +140,7 @@ public class UI_Manager_Game : MonoBehaviour {
 		pauseCanvas.enabled = false;
 		gameCanvas.enabled = true;
 		optionCanvas.enabled = false;
+		finalCanvas.enabled = false;
 		Time.timeScale = 1;
 	}
 
@@ -139,16 +149,36 @@ public class UI_Manager_Game : MonoBehaviour {
 		optionCanvas.enabled = true;
 		gameCanvas.enabled = false;
 		pauseCanvas.enabled = false;
+		finalCanvas.enabled = false;
 	}
 
 	public void UnOptionMode ()
 	{
-
 		pauseCanvas.enabled = true;
 		gameCanvas.enabled = false;
 		optionCanvas.enabled = false;
+		finalCanvas.enabled = false;
 	}
 
+	public void FinalScoreMode ()
+	{
+		pauseCanvas.enabled = false;
+		gameCanvas.enabled = false;
+		optionCanvas.enabled = false;
+		finalCanvas.enabled = true;
+		Time.timeScale = 0;
+		finalScoreTxt.text = (""+score1);
+	}
+	public void RestartMode ()
+	{
+		Time.timeScale = 1;
+		Application.LoadLevel ("level");
+	}
+	public void MainMenuMode ()
+	{
+		Time.timeScale = 1;
+		Application.LoadLevel ("Main_Menu");
+	}
 	public void VolumeChange(bool Positive)
 	{
 		if (Positive) 

@@ -8,6 +8,8 @@ public class GameManager : Singleton<GameManager> {
     public Player player;
     public GameObject emergencyLightPrefab;
 	public float comboTimeMax;
+	public GameObject UIManagerGame;
+
     #endregion
 
     #region Attributs privés
@@ -16,6 +18,8 @@ public class GameManager : Singleton<GameManager> {
     private float timer;
 	private bool emergency = false;
 	private float timerCombo;
+
+	private GameObject UIManagerGame2;
     #endregion
 
     #region Accesseurs
@@ -55,7 +59,7 @@ public class GameManager : Singleton<GameManager> {
 				emergency = true;
             }
             else if (timer <= 0) {
-                Application.LoadLevel ("Main_Menu");
+				UI_Manager_Game.Instance.FinalScoreMode ();
             }
 			yield return new WaitForEndOfFrame();
         } while (true);
