@@ -14,12 +14,15 @@ public class Dynamite : MonoBehaviour {
     public GameObject explosionPrefab;
     public LayerMask layerMaskPlayer;
     public LayerMask layerMaskBlock;
+    public AnimationCurve BlinkSpeed;
+    public Gradient BlinkGradient;
 
 	float truecooldown=0,maxcooldown=0;
     #endregion
 
     #region Attributs privés
     public Type type;
+    private float blink = 0f;
     #endregion
 
     #region Méthodes privées
@@ -29,7 +32,6 @@ public class Dynamite : MonoBehaviour {
         GameObject explosion = Instantiate (explosionPrefab, partpos, Quaternion.identity) as GameObject;
         Destroy (explosion, 2);*/
         ParticleManager.Instance.Boom (transform.position);
-
         BlocksManager.Instance.Detonate (transform.position, type);
 
         Destroy (gameObject);
@@ -37,11 +39,7 @@ public class Dynamite : MonoBehaviour {
 
 	Material matdynamite;
 
-	float blink=0f;
-
-	public AnimationCurve BlinkSpeed;
-	public Gradient BlinkGradient;
-
+	
     void Start () 
 	{
 		truecooldown = (float)countdown;
