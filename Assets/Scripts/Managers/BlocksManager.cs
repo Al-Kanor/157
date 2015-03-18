@@ -27,6 +27,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject ore1BlocPrefab;
     public GameObject ore2BlocPrefab;
     public GameObject ore3BlocPrefab;
+    public GameObject undestructibleBlockPrefab;
     public GameObject vehicleBlockPrefab;
     //public GameObject orePrefab;
     //public GameObject vehiclePrefab;
@@ -95,7 +96,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     int rand = Random.Range (0, 100);
                     if (1 == Mathf.Abs (x + z)) {
                         // Blocks that directly sourround the player must be blastable
-                        currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
+                        currentBlock = Instantiate (undestructibleBlockPrefab) as GameObject;
                     }
                     else {
                         if (rand < oreBlockProba) {

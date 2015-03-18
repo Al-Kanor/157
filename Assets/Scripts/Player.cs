@@ -61,7 +61,6 @@ public class Player : MonoBehaviour
     #region Méthodes privées
     void Move()
     {
-
         targetPos += new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y);
 
         // Rotation
@@ -71,9 +70,6 @@ public class Player : MonoBehaviour
             y = 180;
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, y, 0));
-
-        
-
 
         isMovable = false;
         BlocksManager.Instance.UpdateBlocks(targetPos, TouchManager.Instance.SwipeAxis);
@@ -111,16 +107,11 @@ public class Player : MonoBehaviour
             needsToBeRed = false;
         }
 
-
-
         #region Mouvement sans véhicule
-
-
         RaycastHit hit;
-        if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null)
-        {
-            if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
-            {
+        if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null) {
+            
+            if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock)) {
                 if ("Empty Block" == hit.collider.tag)
                 {
                     hit.collider.gameObject.GetComponent<Block>().Die();
