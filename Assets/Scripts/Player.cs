@@ -112,6 +112,7 @@ public class Player : MonoBehaviour
         if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null) {
             
             if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock)) {
+                Debug.Log ("block");
                 if ("Empty Block" == hit.collider.tag)
                 {
                     hit.collider.gameObject.GetComponent<Block>().Die();

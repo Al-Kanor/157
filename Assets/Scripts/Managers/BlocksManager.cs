@@ -96,7 +96,7 @@ public class BlocksManager : Singleton<BlocksManager> {
                     int rand = Random.Range (0, 100);
                     if (1 == Mathf.Abs (x + z)) {
                         // Blocks that directly sourround the player must be blastable
-                        currentBlock = Instantiate (undestructibleBlockPrefab) as GameObject;
+                        currentBlock = Instantiate (emptyBlocPrefab) as GameObject;
                     }
                     else {
                         if (rand < oreBlockProba) {

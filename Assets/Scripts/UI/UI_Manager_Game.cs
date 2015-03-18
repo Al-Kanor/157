@@ -70,7 +70,7 @@ public class UI_Manager_Game : MonoBehaviour {
 		if (timer2 >= 12.0f) {
 			comboCount = GameManager.Instance.ComboCounter;
 			comboTxt.text = ("x" + comboCount);
-			Debug.Log (timer2);
+			//Debug.Log (timer2);
 		}
 		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
 		scoreScrollbar.size = scoreScrollbarValue;
