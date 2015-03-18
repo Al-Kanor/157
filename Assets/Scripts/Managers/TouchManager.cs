@@ -68,7 +68,7 @@ public class TouchManager : Singleton<TouchManager>
                     CheckSwips = false;
                 }
 
-                 else if (delta.y < -swipeTolerance)
+                else if (delta.y < -swipeTolerance)
                 {
                     //Debug.Log("down");
                     CurrentGesture = Gestures.SwipeDown;
@@ -82,11 +82,11 @@ public class TouchManager : Singleton<TouchManager>
                     CurrentGesture = Gestures.SwipeUp;
                     SwipeAxis = Vector2.up;
                     CheckSwips = false;
-                   
-    
+
+
                 }
             }
-
+            /*
             if ((Input.touchCount > 0 && (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)) || Input.GetMouseButtonUp(0))
             {
                 if (timer <= 0)
@@ -110,7 +110,7 @@ public class TouchManager : Singleton<TouchManager>
     }
 
 
-    void CheckDoubleTap()
+   void CheckDoubleTap()
     {
         StopAllCoroutines();
         StartCoroutine(DoubleTap());
@@ -131,7 +131,8 @@ public class TouchManager : Singleton<TouchManager>
                 yield break;
             }
             yield return new WaitForEndOfFrame();
-        }
+        }*/
 
+        }
     }
 }

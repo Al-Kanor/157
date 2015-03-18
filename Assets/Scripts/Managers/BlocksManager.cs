@@ -6,6 +6,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     #region Attributs publics
     public int offset = 7; // Number of lines / columns that must be generated around the player
     public int oreBlockProba = 10;  // Proba of ore block spawn (%)
+    public int vehicleBlockProba = 5; // Proba of vehicle blocks spawning (%)
     public int chunkProba = 40;  // Proba of ore block spawn (%)
     public int chunk2blocksProba = 10;
     public int chunk3blocksProba = 10;
@@ -19,6 +20,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject blocksContainerObject;
     public GameObject emptyBlocPrefab;
     public GameObject oreBlocPrefab;
+    public GameObject vehicleBlockPrefab;
     #endregion
 
     #region Attributs privés
@@ -169,7 +171,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         }
 
         if (blockObjects.ContainsKey (new Vector2 (x, z))) {
-            // Already a chunk here ? No conflit, I give up !
+            // Already a chunk here ? No conflict, I give up !
             return;
         }
 
@@ -234,7 +236,12 @@ public class BlocksManager : Singleton<BlocksManager> {
         Vector2 coords = new Vector2 (x, z);
         if (!blockObjects.ContainsKey (coords)) {
             rand = Random.Range (0, 100);
-            if (rand < oreBlockProba) {
+            if(rand<vehicleBlockProba)
+            {
+                currentBlock = (GameObject)Instantiate(vehicleBlockPrefab);
+            }
+
+            else if (rand < oreBlockProba) {
                 //currentBlock = (GameObject)Instantiate (oreBlocPrefab);
                 currentBlock = (GameObject)Instantiate (emptyBlocPrefab);
             }
