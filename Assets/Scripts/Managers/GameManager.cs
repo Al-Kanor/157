@@ -8,7 +8,6 @@ public class GameManager : Singleton<GameManager> {
     public Player player;
     public GameObject emergencyLightPrefab;
 	public float comboTimeMax;
-	public GameObject UIManagerGame;
 
     #endregion
 
@@ -18,8 +17,6 @@ public class GameManager : Singleton<GameManager> {
     private float timer;
 	private bool emergency = false;
 	private float timerCombo;
-
-	private GameObject UIManagerGame2;
     #endregion
 
     #region Accesseurs
