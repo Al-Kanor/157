@@ -8,6 +8,9 @@ public class BlocksManager : Singleton<BlocksManager> {
     public int oreBlockProba = 10;  // Proba of ore block spawn (%) in the base
     public float vehicleBlockProba = 0.5f; // Proba of vehicle blocks spawning (%)
     public int chunkProba = 40;  // Proba of ore block spawn (%)
+    public int chunkOre1proba = 60;
+    public int chunkOre2proba = 30;
+    public int chunkOre3proba = 10;
     public int chunk2blocksProba = 10;
     public int chunk3blocksProba = 10;
     public int chunk4blocksProba = 25;
@@ -185,7 +188,17 @@ public class BlocksManager : Singleton<BlocksManager> {
         }
         
         // What type of ore ?
-        int oreType = Random.Range (0, 3);
+        int oreType;
+        rand = Random.Range (0, 100);
+        if (rand < chunkOre1proba) {
+            oreType = 0;
+        }
+        else if (rand < chunkOre2proba) {
+            oreType = 1;
+        }
+        else {
+            oreType = 2;
+        }
         
         float x, z;
         if (dir.x != 0) {
