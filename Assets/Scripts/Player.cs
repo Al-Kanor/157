@@ -150,27 +150,18 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if (isMovable && !stuned && TouchManager.Instance.CurrentGesture != TouchManager.Gestures.None && vehicle == null)
         {
-
             if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
-                Debug.Log("block");
-
-        
                 if ("Empty Block" == hit.collider.tag)
                 {
-                   
-                        hit.collider.gameObject.GetComponent<Block>().Die();
-
-                        if (exploding == null)
-                        {
-
-                            ThrowDynamite();
-                            Move();
-                            transform.GetChild(0).GetComponent<Animation>().Stop();
-                            transform.GetChild(0).GetComponent<Animation>().Play("Blast");
-                        }
-                        
-                    
+                    hit.collider.gameObject.GetComponent<Block>().Die();
+                    if (exploding == null)
+                    {
+                        ThrowDynamite();
+                        Move();
+                        transform.GetChild(0).GetComponent<Animation>().Stop();
+                        transform.GetChild(0).GetComponent<Animation>().Play("Blast");
+                    }
                 }
                 if ("Vehicle Block" == hit.collider.tag)
                 {
@@ -178,8 +169,6 @@ public class Player : MonoBehaviour
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
                 }
-
-               
             }
             else
             {
@@ -188,8 +177,6 @@ public class Player : MonoBehaviour
                 transform.GetChild(0).GetComponent<Animation>().Play("Walk");
             }
         }
-
-
         #endregion
 
         #region Mouvement véhicule
@@ -258,7 +245,6 @@ public class Player : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, targetPos, vehicleSpeed * Time.deltaTime);
         else
             transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
-
 
         if (Vector3.Distance(transform.position, targetPos) < 0.05f)
         {
