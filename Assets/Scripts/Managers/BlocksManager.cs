@@ -41,6 +41,7 @@ public class BlocksManager : Singleton<BlocksManager> {
     private Dictionary<Vector2, GameObject> blockObjects;
     private int emptyBlocks = 0;
     //private Transform blocksContainerTransform;
+    private int hack;   // Hack pour gérer le freeze des chunks lorsque les collisions sont mal gérées (pas le temps de gérer ça proprement)
     #endregion
 
     #region Méthodes publiques
@@ -218,6 +219,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         CreateBlock (currentBlock, x, z);
 
         // Creation of the blocks around
+        hack = 0;
         for (int i = 0; i < nbBlocks - 1; ++i) {
             bool blockExist = false;
             rand = Random.Range (0, 4);
@@ -256,7 +258,11 @@ public class BlocksManager : Singleton<BlocksManager> {
                     break;
             }
             if (blockExist) {
+                if (hack > 100) {
+                    return;
+                }
                 i--;    // Loop again
+                hack++;
             }
             else {
                 currentBlock = (GameObject)Instantiate (undestructibleBlockPrefab);
@@ -343,6 +349,7 @@ public class BlocksManager : Singleton<BlocksManager> {
         CreateBlock (currentBlock, x, z);
 
         // Creation of the blocks around
+        hack = 0;
         for (int i = 0; i < nbBlocks - 1; ++i) {
             bool blockExist = false;
             rand = Random.Range (0, 4);
@@ -381,6 +388,9 @@ public class BlocksManager : Singleton<BlocksManager> {
                     break;
             }
             if (blockExist) {
+                if (hack > 100) {
+                    return;
+                }
                 i--;    // Loop again
             }
             else {

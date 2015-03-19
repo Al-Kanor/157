@@ -29,8 +29,7 @@ public class Block : MonoBehaviour {
         if(_random<explosionChance && this.tag=="Empty Block")
         {
             GameManager.Instance.player.exploding = this;
-            Instantiate(explodingPrefab, transform.position, Quaternion.identity);
-            
+            Instantiate(explodingPrefab, transform.position, Quaternion.identity);  
         }
         else
         ParticleManager.Instance.Blast (transform.position);
