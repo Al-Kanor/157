@@ -42,6 +42,7 @@ public class Block : MonoBehaviour {
 
         if (null != vehiclePrefab)
         {
+            Debug.Log("Vehicle!");
             Instantiate (vehiclePrefab, transform.position, Quaternion.identity);
             
         }
