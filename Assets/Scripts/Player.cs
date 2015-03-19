@@ -131,6 +131,15 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if(vehicle!=null)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
+        else if(vehicle == null && transform.GetChild(0).gameObject.activeSelf==false)
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+
         if (vehicle != null && needsToBeRed == true)
         {
             GameManager.Instance.player.transform.FindChild("torche").GetComponent<Light>().color = color1;
