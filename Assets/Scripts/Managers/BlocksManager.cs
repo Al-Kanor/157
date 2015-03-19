@@ -29,7 +29,10 @@ public class BlocksManager : Singleton<BlocksManager> {
     public GameObject ore1BlocPrefab;
     public GameObject ore2BlocPrefab;
     public GameObject ore3BlocPrefab;
-    public GameObject undestructibleBlockPrefab;
+    public GameObject undestructibleBlock1Prefab;
+    public GameObject undestructibleBlock2Prefab;
+    public GameObject undestructibleBlock3Prefab;
+    public GameObject undestructibleBlock4Prefab;
     public GameObject vehicleBlockPrefab;
     //public GameObject orePrefab;
     //public GameObject vehiclePrefab;
@@ -87,9 +90,6 @@ public class BlocksManager : Singleton<BlocksManager> {
             }
         }
     }
-
-
-
 
     /*
      * Generates the blocks that are presents at the beginning of the game
@@ -199,6 +199,9 @@ public class BlocksManager : Singleton<BlocksManager> {
             nbBlocks = 9;
         }
 
+        // What type of undestructible block ?
+        int blockType = Random.Range (0, 4);
+
         float x, z;
         if (dir.x != 0) {
             x = dir.x < 0 ? pos.x - offset - nbBlocks : pos.x + offset + nbBlocks;
@@ -215,7 +218,14 @@ public class BlocksManager : Singleton<BlocksManager> {
         }
 
         // Creation of the "pivot block"
-        GameObject currentBlock = (GameObject)Instantiate (undestructibleBlockPrefab);
+        GameObject currentBlock = null;
+        switch (blockType) {
+            case 0: currentBlock = (GameObject)Instantiate (undestructibleBlock1Prefab); break;
+            case 1: currentBlock = (GameObject)Instantiate (undestructibleBlock2Prefab); break;
+            case 2:  currentBlock = (GameObject)Instantiate (undestructibleBlock3Prefab); break;
+            case 3: currentBlock = (GameObject)Instantiate (undestructibleBlock4Prefab); break;
+        }
+        
         CreateBlock (currentBlock, x, z);
 
         // Creation of the blocks around
@@ -265,7 +275,12 @@ public class BlocksManager : Singleton<BlocksManager> {
                 hack++;
             }
             else {
-                currentBlock = (GameObject)Instantiate (undestructibleBlockPrefab);
+                switch (blockType) {
+                    case 0: currentBlock = (GameObject)Instantiate (undestructibleBlock1Prefab); break;
+                    case 1: currentBlock = (GameObject)Instantiate (undestructibleBlock2Prefab); break;
+                    case 2: currentBlock = (GameObject)Instantiate (undestructibleBlock3Prefab); break;
+                    case 3: currentBlock = (GameObject)Instantiate (undestructibleBlock4Prefab); break;
+                }
                 CreateBlock (currentBlock, x, z);
             }
         }

@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(vehicleBlockCount);
+        //Debug.Log(vehicleBlockCount);
         if(vehicle!=null)
         {
             transform.GetChild(0).gameObject.SetActive(false);
