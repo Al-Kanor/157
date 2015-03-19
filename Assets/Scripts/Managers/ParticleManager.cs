@@ -6,6 +6,8 @@ public class ParticleManager : Singleton<ParticleManager> {
     //public Vector3 velocity = new Vector3 (0, 10, 0);
     public GameObject blastPrefab;
     public GameObject explosionPrefab;
+	public float xploHeight;
+	public float xploHeightBlast;
     #endregion
 
     #region Attributs privés
@@ -16,14 +18,14 @@ public class ParticleManager : Singleton<ParticleManager> {
 
     #region Méthodes publiques
     public void Blast (Vector3 pos) {
-        blastObjects[currentBlastIndex].transform.position = pos + Vector3.up * 0;
+        blastObjects[currentBlastIndex].transform.position = pos + Vector3.up * xploHeightBlast;
         blastObjects[currentBlastIndex].GetComponent<ParticleSystem> ().Play ();
         currentBlastIndex = (currentBlastIndex + 1) % 3;
     }
 
     public void Boom (Vector3 pos) {
         //explosionObject.transform.position = new Vector3 (pos.x, 1000f, pos.z);
-        explosionObject.transform.position = pos + Vector3.up * 1.5f;
+        explosionObject.transform.position = pos + Vector3.up * xploHeight;
 //        explosionObject.GetComponent<ParticleSystem> ().Emit (pos, velocity, 10, 2, Color.white);
         explosionObject.GetComponent<ParticleSystem> ().Play ();
     }
