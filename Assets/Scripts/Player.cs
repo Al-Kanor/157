@@ -154,12 +154,7 @@ public class Player : MonoBehaviour
         {
             if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
-<<<<<<< HEAD
-               // Debug.Log("block");
 
-        
-=======
->>>>>>> e4fd06e688214e97bf3c642f26b17e0a71257c43
                 if ("Empty Block" == hit.collider.tag)
                 {
                     hit.collider.gameObject.GetComponent<Block>().Die();
