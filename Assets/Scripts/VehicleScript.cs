@@ -5,43 +5,41 @@ public class VehicleScript : MonoBehaviour
 {
 
     public float movementSpeed = 10f;
-    public bool activated = false;
     GameObject _player;
-    bool _destroy;
+   private  bool activated;
+    int _playerBlockCount = 0;
+    
 
 
     void Start()
     {
         _player = GameObject.Find("Player");
-        //_destroy = GameObject.Find("Player").GetComponent<Player>().destroy;
+
+        _playerBlockCount = GameObject.Find("Player").GetComponent<Player>().vehicleBlockCount;
+        
     }
 
 
     void Update()
     {
 
-        if (GameManager.Instance.player != null && Vector3.Distance(transform.position, GameManager.Instance.player.transform.position) <= 0.1f)
+
+
+        if (GameManager.Instance.player != null && Vector3.Distance(transform.position, GameManager.Instance.player.transform.position) <= 0.1f && _playerBlockCount > 0)
         {
-            
-                
-            
-            GameManager.Instance.player.vehicle = this;
-            /*if(_destroy ==true)
+            if (GameManager.Instance.player.vehicle != this && transform.parent != _player.transform && activated==false)
             {
-                Destroy(gameObject);
-            }*/
-           transform.parent = _player.transform;
-            
-            /*
-            transform.rotation = _player.transform.rotation;
-            Debug.Log(transform.rotation);*/
-           
-            //StartCoroutine ("Ride");
-
-          
-
+                transform.rotation = GameObject.Find("Player").transform.rotation;
+                activated = true;
+                GameManager.Instance.player.vehicle = this;
+                transform.parent = _player.transform;
+                Debug.Log("saucisse");
+            }
+      
         }
-
+       
+        
+        
 
 
 

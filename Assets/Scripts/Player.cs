@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public Color normalColor = new Color(255, 0, 0, 1);
     public int vehicleBlockLimit = 30;
     public bool needsToBeRed = false;
+    public int vehicleBlockCount = 0;
     //public bool destroy = false;
 
 
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
     private bool isMovable = true;
     private bool isStunable = true;
     private bool stuned = false;
-    private int vehicleBlockCount = 0;
+   
     //private bool isGone = false;
     private Quaternion dynamiteRotation = Quaternion.identity;
 
@@ -132,8 +133,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(vehicleBlockCount);
-        if(vehicle!=null)
+        if(vehicle!=null && vehicleBlockCount>=vehicleBlockLimit)
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
@@ -238,9 +238,8 @@ public class Player : MonoBehaviour
             {
                 GameManager.Instance.player.transform.FindChild("torche").GetComponent<Light>().color = normalColor;
                 vehicle = null;
-                Destroy(transform.FindChild("Vehicle(Clone)"));
-                //destroy = true;
-                
+                Transform _vehicleTransform = transform.FindChild("Vehicle(Clone)");
+                Destroy(_vehicleTransform.gameObject);
             }
 
         }
