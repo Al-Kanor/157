@@ -67,13 +67,13 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	void Start () 
 	{
         totalBarre = barre1;
-        int i = 0;
-        scoreValues[i++] = barre1;
-        scoreValues[i++] = barre2;
-        scoreValues[i++] = barre3;
-        scoreValues[i++] = barre4;
-        scoreValues[i++] = barre5;
-        scoreValues[i++] = barre6;
+        int j = 0;
+        scoreValues[j++] = barre1;
+        scoreValues[j++] = barre2;
+        scoreValues[j++] = barre3;
+        scoreValues[j++] = barre4;
+        scoreValues[j++] = barre5;
+        scoreValues[j++] = barre6;
         //scoreValues.Add(barre1); scoreValues.Add(barre2); scoreValues.Add(barre3); scoreValues.Add(barre4); scoreValues.Add(barre5); scoreValues.Add(barre6);
 
 		scoreScrollbar.value = 0;
@@ -115,10 +115,13 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 		lash.rectTransform.localPosition = newVector;
 
         if (score2 > totalBarre) {
-            ancienneBarre = scoreValues[i];
-            totalBarre = totalBarre + scoreValues[i];
+            ancienneBarre = scoreValues[i-1];
+            totalBarre = totalBarre + scoreValues[i-1];
             i++;
 			ColorSwap ();
+            Debug.Log("Score =" + score2);
+            Debug.Log("ancienneBarre =" + ancienneBarre);
+            Debug.Log("totalBarre =" + totalBarre);
 		}
 
 	}
