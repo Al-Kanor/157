@@ -331,7 +331,8 @@ public class BlocksManager : Singleton<BlocksManager> {
         if (rand < chunkOre1proba) {
             oreType = 0;
         }
-        else if (rand < chunkOre2proba) {
+        else if (rand < chunkOre1proba + chunkOre2proba)
+        {
             oreType = 1;
         }
         else {

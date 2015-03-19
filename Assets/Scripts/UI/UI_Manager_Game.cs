@@ -7,7 +7,15 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	public Scrollbar scoreScrollbar;
 	public Image scrollBarHandle;
 	public Image lash;
-	public int scroreBarLimit;
+    public int barre1 = 50;
+    public int barre2 = 100;
+    public int barre3 = 250;
+    public int barre4 = 500;
+    public int barre5 = 900;
+    public int barre6 = 1200;
+
+    private int totalBarre;
+    private int ancienneBarre;
 
 	public Text comboTxt;
 	public Text finalScoreTxt;
@@ -24,7 +32,7 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	public Sprite tuto1;
 	public Sprite tuto2;
 	public Sprite tuto3;
-
+    private int[] scoreValues = new int[6];
 	public Canvas pauseCanvas;
 	public Canvas gameCanvas;
 	public Canvas optionCanvas;
@@ -39,6 +47,7 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	public Sprite lvl2;
 	public Sprite lvl3;
 	public Sprite lvl4;
+    private int i = 1;
 
 	private float timer1;
 	private float timer2;
@@ -57,6 +66,16 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	// Use this for initialization
 	void Start () 
 	{
+        totalBarre = barre1;
+        int i = 0;
+        scoreValues[i++] = barre1;
+        scoreValues[i++] = barre2;
+        scoreValues[i++] = barre3;
+        scoreValues[i++] = barre4;
+        scoreValues[i++] = barre5;
+        scoreValues[i++] = barre6;
+        //scoreValues.Add(barre1); scoreValues.Add(barre2); scoreValues.Add(barre3); scoreValues.Add(barre4); scoreValues.Add(barre5); scoreValues.Add(barre6);
+
 		scoreScrollbar.value = 0;
 		stacks = 0;
 		score1 = 0;
@@ -72,6 +91,8 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 
 		soundVolume = 4;
 		lumVolume = 4;
+
+        
 	}
 	
 	// Update is called once per frame
@@ -85,14 +106,18 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 			comboCount = GameManager.Instance.ComboCounter;
 			comboTxt.text = ("x" + comboCount);
 		}
-		scoreScrollbarValue = (score2 - (scroreBarLimit*stacks))/scroreBarLimit;
+
+        scoreScrollbarValue = ((score2 - ancienneBarre) / (totalBarre));
 		scoreScrollbar.size = scoreScrollbarValue;
+
 		Vector3 newVector = lash.rectTransform.localPosition;
 		newVector.x = (baseLashXPosition - (1.92f*timer2));
 		lash.rectTransform.localPosition = newVector;
-		if (score2 > (scroreBarLimit*(stacks+1))) 
-		{
-			stacks = stacks +1;
+
+        if (score2 > totalBarre) {
+            ancienneBarre = scoreValues[i];
+            totalBarre = totalBarre + scoreValues[i];
+            i++;
 			ColorSwap ();
 		}
 
@@ -101,29 +126,29 @@ public class UI_Manager_Game : Singleton<UI_Manager_Game> {
 	void ColorSwap () 
 	{
 
-		switch (stacks) 
+        switch (scoreValues[i]) 
 		{
-			case 1 :
+			case 100 :
 				scoreScrollbar.GetComponent<Image>().sprite = handle_1;
 				scrollBarHandle.sprite = handle_2;
 			break;
 
-			case 2 : 
+			case 250 : 
 				scoreScrollbar.GetComponent<Image>().sprite = handle_2;
 				scrollBarHandle.sprite = handle_3;
 			break;
 				
-			case 3 : 
+			case 500 : 
 				scoreScrollbar.GetComponent<Image>().sprite = handle_3;
 				scrollBarHandle.sprite = handle_4;
 			break;
 
-			case 4 : 
+			case 900 : 
 				scoreScrollbar.GetComponent<Image>().sprite = handle_4;
 				scrollBarHandle.sprite = handle_5;
 			break;
 
-			case 5 : 
+			case 1200 : 
 				scoreScrollbar.GetComponent<Image>().sprite = handle_5;
 				scrollBarHandle.sprite = handle_6;
 			break;
