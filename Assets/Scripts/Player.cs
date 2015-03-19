@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public Color normalColor = new Color(255, 0, 0, 1);
     public int vehicleBlockLimit = 30;
     public bool needsToBeRed = false;
+    //public bool destroy = false;
 
 
 
@@ -131,6 +132,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(vehicleBlockCount);
         if(vehicle!=null)
         {
             transform.GetChild(0).gameObject.SetActive(false);
@@ -153,7 +155,7 @@ public class Player : MonoBehaviour
 
             if (Physics.Raycast(targetPos, new Vector3(TouchManager.Instance.SwipeAxis.x, 0, TouchManager.Instance.SwipeAxis.y), out hit, 1, layerMaskBlock))
             {
-                Debug.Log("block");
+               // Debug.Log("block");
 
         
                 if ("Empty Block" == hit.collider.tag)
@@ -177,6 +179,8 @@ public class Player : MonoBehaviour
                     hit.collider.gameObject.GetComponent<Block>().Die();
                     transform.GetChild(0).GetComponent<Animation>().Stop();
                     transform.GetChild(0).GetComponent<Animation>().Play("Blast");
+                    vehicleBlockCount = vehicleBlockLimit;
+                    //destroy = false;
                 }
 
                
@@ -194,7 +198,7 @@ public class Player : MonoBehaviour
 
         #region Mouvement véhicule
 
-        else if (isMovable && !stuned && vehicle != null)
+        if (isMovable && !stuned && vehicle != null)
         {
 
             if (needsToBeRed == false)
@@ -245,9 +249,10 @@ public class Player : MonoBehaviour
             if (vehicleBlockCount < 0)
             {
                 GameManager.Instance.player.transform.FindChild("torche").GetComponent<Light>().color = normalColor;
-
                 vehicle = null;
-                vehicleBlockCount = vehicleBlockLimit;
+                Destroy(transform.FindChild("Vehicle(Clone)"));
+                //destroy = true;
+                
             }
 
         }
