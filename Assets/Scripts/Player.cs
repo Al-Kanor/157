@@ -275,8 +275,7 @@ public class Player : MonoBehaviour
     {
         if (null == vehicle)
         {
-
-
+			SoundManager.Instance.PlaySound (SoundManager.SoundName.EXPLOSION_CHARACTER);
             stuned = true;
             isStunable = false;
             transform.GetChild(0).GetComponent<Animation>().Play("Stun");

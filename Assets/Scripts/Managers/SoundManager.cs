@@ -35,7 +35,8 @@ public class SoundManager : Singleton<SoundManager> {
 		VOICE15,
 		VOICE16,
 		VOICE17,
-		VOICE18
+		VOICE18,
+		EXPLOSION_CHARACTER
     };
     #endregion
 
@@ -162,7 +163,9 @@ public class SoundManager : Singleton<SoundManager> {
 			case SoundName.VOICE18:
 				soundIndex = 31;
 			break;
-
+			case SoundName.EXPLOSION_CHARACTER:
+				soundIndex = 32;
+			break;
         }
 
         if (play) {
