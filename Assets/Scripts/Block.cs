@@ -40,12 +40,39 @@ public class Block : MonoBehaviour {
             
         }
 
-        if (null != vehiclePrefab)
-        {
-            Debug.Log("Vehicle!");
-            Instantiate (vehiclePrefab, transform.position, Quaternion.identity);
+        if (null != vehiclePrefab) {
+			Debug.Log ("Vehicle!");
+			Instantiate (vehiclePrefab, transform.position, Quaternion.identity);
+			SoundManager.Instance.PlaySound (SoundManager.SoundName.CAISSE);
             
-        }
+		} else {
+			int rand = Random.Range(0, 7);
+			switch (rand) {
+			case 0: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK1);
+				break;
+			case 1: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK2);
+				break;
+			case 2: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK3);
+				break;
+			case 3: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK4);
+				break;
+			case 4: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK5);
+				break;
+			case 5: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK6);
+				break;
+			case 6: 
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.HITROCK7);
+				break;
+			}
+		}
+
+
 
         // Bye
         BlocksManager.Instance.DestroyBlock(gameObject);

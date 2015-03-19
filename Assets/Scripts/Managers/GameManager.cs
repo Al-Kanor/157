@@ -40,6 +40,7 @@ public class GameManager : Singleton<GameManager> {
         timer = gameDuration;
 		comboCounter = 1;
         StartCoroutine ("UpdateTimer");
+		SoundManager.Instance.PlaySound (SoundManager.SoundName.GAMESTART);
     }
 
     IEnumerator UpdateTimer () {

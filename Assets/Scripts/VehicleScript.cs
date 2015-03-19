@@ -22,9 +22,6 @@ public class VehicleScript : MonoBehaviour
 
     void Update()
     {
-
-
-
         if (GameManager.Instance.player != null && Vector3.Distance(transform.position, GameManager.Instance.player.transform.position) <= 0.1f && _playerBlockCount > 0)
         {
             if (GameManager.Instance.player.vehicle != this && transform.parent != _player.transform && activated==false)
@@ -33,17 +30,10 @@ public class VehicleScript : MonoBehaviour
                 activated = true;
                 GameManager.Instance.player.vehicle = this;
                 transform.parent = _player.transform;
-                Debug.Log("saucisse");
+				SoundManager.Instance.PlaySound (SoundManager.SoundName.FOREUSE_LOOP);
             }
       
         }
-       
-        
-        
-
-
-
-
     }
 
 

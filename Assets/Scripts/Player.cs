@@ -240,6 +240,7 @@ public class Player : MonoBehaviour
                 vehicle = null;
                 Transform _vehicleTransform = transform.FindChild("Vehicle(Clone)");
                 Destroy(_vehicleTransform.gameObject);
+				SoundManager.Instance.StopSound (SoundManager.SoundName.FOREUSE_LOOP);
             }
 
         }
@@ -255,14 +256,6 @@ public class Player : MonoBehaviour
         {
             transform.position = targetPos; // Clamp
 
-            // Minerai catch
-            /*
-            //RaycastHit hit;
-            if (Physics.Raycast(transform.position - Vector3.up, Vector3.up, out hit, 1, oreMaskBlock))
-            {
-                hit.collider.GetComponent<Ore>().Target = transform;
-            }
-
             if (0 == Random.Range(0, 10))
             {
                 transform.GetChild(0).GetComponent<Animation>().PlayQueued("Look");
@@ -271,7 +264,7 @@ public class Player : MonoBehaviour
             {
                 transform.GetChild(0).GetComponent<Animation>().PlayQueued("Idle");
             }
-            */
+            
             isMovable = true;
         }
 

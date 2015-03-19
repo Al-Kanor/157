@@ -36,6 +36,7 @@ public class Ore : MonoBehaviour {
             yield return new WaitForEndOfFrame ();
         } while (Vector3.Distance (target.position, transform.position) > 0.1f);
 		GameManager.Instance.Scoring (oreQuantity);
+		SoundManager.Instance.PlaySound (SoundManager.SoundName.MINERAI);
         Destroy (gameObject);
     }
     #endregion

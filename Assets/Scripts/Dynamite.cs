@@ -33,7 +33,7 @@ public class Dynamite : MonoBehaviour {
         Destroy (explosion, 2);*/
         ParticleManager.Instance.Boom (transform.position);
         BlocksManager.Instance.Detonate (transform.position, type);
-
+		SoundManager.Instance.PlaySound (SoundManager.SoundName.EXPLOSION);
         Destroy (gameObject);
     }
 
